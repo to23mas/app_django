@@ -5,6 +5,6 @@ from . import views
 app_name = 'crossroad'
 
 urlpatterns = [
-    path('', views.welcome, name='welcome'),
+    path('', views.welcome_view, name='welcome'),
 
 ]

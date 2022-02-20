@@ -9,7 +9,16 @@
     </head>
     <body>
         <header class="wrapper">
-
+            {% if user.is_authenticated %}
+            <div>
+                <ul>
+                    <li><form class="logout-link" action="{% url 'accounts:logout' %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit">Logout</button>
+                        </form></li>
+                </ul>
+            </div>
+            {% endif %}
         </header>
         <div class="wrapper">
             {% block content %}

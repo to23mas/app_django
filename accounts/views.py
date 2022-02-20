@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import login, logout
-# from django.contrib.auth.decorators import user_passes_test
+
 
 def login_view(request):
     """pro login"""
@@ -26,14 +26,14 @@ def welcome_view(request):
     """welcome page with twi links to signup  and register"""
     if request.user.is_authenticated:
         return redirect('crossroad:welcome')
-
-    return render(request, 'accounts/welcome.html')
+    else:
+        return render(request, 'accounts/welcome.html')
 
 
 def register_view(request):
     """register page with form"""
 
-    if request.user.is_authenticated():
+    if request.user.is_authenticated:
         return redirect('crossroad:welcome')
 
     if request.method == 'POST':
@@ -45,6 +45,7 @@ def register_view(request):
             return redirect('crossroad:welcome')
     else:
         form = UserCreationForm()
+
     return render(request, 'accounts/register.html', {'form': form})
 
 
@@ -52,5 +53,3 @@ def logout_view(request):
     if request.method == 'POST':
         logout(request)
         return redirect('accounts:welcome')
-
-

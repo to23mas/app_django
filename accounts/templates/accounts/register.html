@@ -1,0 +1,13 @@
+{% extends 'html_base.html' %}
+{% block content %}
+    <div class="welcome_card">
+        <h1>Register</h1><br>
+
+        <form class="site-form" action="{% url 'accounts:register' %}" method="post">
+            {{ form }}
+            <input type="submit" value="registration">
+        </form>
+    </div>
+    <a href="{% url 'accounts:welcome' %}">BACK</a>
+
+{% endblock %}

@@ -34,12 +34,23 @@
   left:50%;
   padding:100px;
   position:fixed;
-  text-align:center;
   top:40%;
   transform:translate(-50%, -50%);
 }
+.back_button {
+    background: white;
+    border: 1px solid black;
+    color: #000;
+    font-size: 20px;
+    border-radius: 4px;
+    padding: 5px;
+    margin: 10px 5px;
+}
 
-
+.back_button:hover{
+  color: white;
+    background: grey;
+}
 h1, h2, h3, h4, h5{
     font-weight: normal;
     margin: 0;
@@ -48,4 +59,58 @@ h1, h2, h3, h4, h5{
 a, a:hover, a:visited{
     color: #000000;
     text-decoration: none;
+}
+
+/*FORMS for registration and signup */
+
+
+.registration_form span{
+  display: block;
+}
+.registration_form label{
+  font-weight: bold;
+  padding: 15px 0 0 0;
+}
+.registration_form input{
+  width: 95%;
+  margin: 0 0 6px 0;
+  padding: 5px 0 5px 8px;
+}
+
+.errorlist {
+  color:red;
+  width: 95%;
+  padding: 5px;
+  list-style-type: none;
+  border: 1px solid;
+  margin: 6px 0;
+  float: left;
+}
+.helptext {
+  font-size: 0.8em;
+  margin: 0 0 0 0;
+  color:grey;
+  white-space: pre;
+}
+
+.helptext ul{
+  list-style-type: none;
+  padding:0;
+  margin: 0 0 5px 0;
+}
+
+.registration_form input[type="submit"]{
+    background: white;
+    border: 1px solid black;
+    color: #000;
+    font-size: 20px;
+    border-radius: 4px;
+    padding: 5px 0 5px 0;
+    margin: 20px 5px;
+    width: 33%;
+}
+
+.registration_form input[type="submit"]:hover {
+    color: white;
+    background: red;
 }

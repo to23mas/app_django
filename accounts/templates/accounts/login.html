@@ -1,10 +1,12 @@
 {% extends 'html_base.html' %}
 {% block content %}
-
+<div class="bg"></div>
+<div class="bg bg2"></div>
+<div class="bg bg3"></div>
     <div class="welcome_card">
         <h1>Login</h1><br>
 
-        <form class="site-form" action="{% url 'accounts:login' %}" method="post">
+        <form class="registration_form" action="{% url 'accounts:login' %}" method="post">
             {% csrf_token %} {# security token #}
             {{ form }}
             {% if request.GET.next %}
@@ -12,7 +14,8 @@
             {% endif %}
             <input type="submit" value="login">
         </form>
+    <a class="back_button" href="{% url 'accounts:welcome' %}">BACK</a>
     </div>
-    <a href="{% url 'accounts:welcome' %}">BACK</a>
+
 
 {% endblock %}

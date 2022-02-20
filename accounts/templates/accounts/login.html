@@ -1,5 +1,15 @@
 {% extends 'html_base.html' %}
 {% block content %}
-    <h1>Signup</h1>
+
+    <div class="welcome_card">
+        <h1>Login</h1><br>
+
+        <form class="site-form" action="{% url 'accounts:login' %}" method="post">
+            {% csrf_token %} {# security token #}
+            {{ form }}
+            <input type="submit" value="login">
+        </form>
+    </div>
     <a href="{% url 'accounts:welcome' %}">BACK</a>
+
 {% endblock %}

@@ -4,6 +4,7 @@
         <h1>Register</h1><br>
 
         <form class="site-form" action="{% url 'accounts:register' %}" method="post">
+            {% csrf_token %} {# security token #}
             {{ form }}
             <input type="submit" value="registration">
         </form>

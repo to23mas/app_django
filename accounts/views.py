@@ -1,6 +1,9 @@
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth.forms import AuthenticationForm, PasswordResetForm
 from django.contrib.auth import login, logout
+from .forms import CustomUserForm
+from .mail import Mailer
 
 
 def login_view(request):
@@ -37,14 +40,14 @@ def register_view(request):
         return redirect('crossroad:welcome')
 
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
+        form = CustomUserForm(request.POST)
         if form.is_valid():
             user = form.save()
             login(request, user)  # přihlášení uživatele
             #  log the user in
             return redirect('crossroad:welcome')
     else:
-        form = UserCreationForm()
+        form = CustomUserForm()
 
     return render(request, 'accounts/register.html', {'form': form})
 
@@ -53,3 +56,22 @@ def logout_view(request):
     if request.method == 'POST':
         logout(request)
         return redirect('accounts:welcome')
+
+
+def forgotten_password_view(request):
+    if request.user.is_authenticated:
+        return redirect('crossroad:welcome')
+
+    # mail = Mailer('Test', 'to23mas', 'aaaaaaaaaaaaaa')
+    # if mail.send_reset_password():
+    #     return HttpResponse('success')
+    # else:
+    #     return HttpResponse('fail')
+
+
+    return render(request, 'accounts/forgotten_password.html', {'form': PasswordResetForm()})
+
+
+def redirect_logged_user(user):
+    if user.is_authenticated:
+        return redirect('crossroad:welcome')

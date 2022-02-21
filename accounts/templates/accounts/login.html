@@ -12,9 +12,10 @@
             {% if request.GET.next %}
                 <input type="hidden" name="back" value="{{ request.GET.next }}">
             {% endif %}
-            <input type="submit" value="login">
+            <input type="submit" value="přihlásit">
         </form>
     <a class="back_button" href="{% url 'accounts:welcome' %}">BACK</a>
+    <a class="back_button" href="{% url 'accounts:reset' %}">pass</a>
     </div>
 
 

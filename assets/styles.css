@@ -1,6 +1,7 @@
 /*WELCOME PAGE BACKGROUND EFFECT*/
 /*INSPIRED BY Chris Smith - SLIDING DIAGONALS BACKGROUND EFFECT */
-.bg {
+/*BG BG1 BG2*/
+.b {
   animation:slide 4s ease-in-out infinite alternate;
   background-image: linear-gradient(63deg, #a5a5a5 50%, #000000 50%);
   bottom:0;
@@ -11,11 +12,11 @@
   top:0;
   z-index:-1;
 }
-.bg2 {
+.b {
   animation-direction:alternate-reverse;
   animation-duration:5s;
 }
-.bg3 {
+.b {
   animation-duration:3s;
 }
 @keyframes slide {

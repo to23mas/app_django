@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.forms import AuthenticationForm, PasswordResetForm
 from django.contrib.auth import login, logout
 from .forms import CustomUserForm
-from .mail import Mailer
+from .validation import Validate
 
 
 def login_view(request):
@@ -62,16 +62,20 @@ def forgotten_password_view(request):
     if request.user.is_authenticated:
         return redirect('crossroad:welcome')
 
-    # mail = Mailer('Test', 'to23mas', 'aaaaaaaaaaaaaa')
-    # if mail.send_reset_password():
-    #     return HttpResponse('success')
-    # else:
-    #     return HttpResponse('fail')
-
-
-    return render(request, 'accounts/forgotten_password.html', {'form': PasswordResetForm()})
+    error = ''
+    if request.method == 'POST':
+        error = Validate.validate_email(request.POST['email'])
+        if error != '':
+            return render(request, 'accounts/forgotten_password.html', {'form': PasswordResetForm(),
+                                                                        'error': error})
+        else:
+            return render(request, 'accounts/password_send.html')
 
 
 def redirect_logged_user(user):
     if user.is_authenticated:
         return redirect('crossroad:welcome')
+
+
+def password_send_view(request):
+    return render(request, 'accounts/password_send.html')

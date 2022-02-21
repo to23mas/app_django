@@ -7,4 +7,6 @@ class Lesson(models.Model):
     le_capitols = models.IntegerField()
     le_difficulty = models.IntegerField()
 
+    def __str__(self):
+        return self.lesson_name
 

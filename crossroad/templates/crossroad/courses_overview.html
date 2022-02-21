@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block content %}
+
+
+    {% for lesson in lessons %}
+        {{ lesson.lesson_name }}<br>
+    {% endfor %}
+
+
+
+{% endblock %}

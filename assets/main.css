@@ -1,0 +1,23 @@
+.div20{
+    width: 10%;
+    height:100%;
+    float: left;
+}
+.div80{
+    height:100%;
+    background-color: bisque;
+    width: 90%;
+    float: right;
+}
+.div100{
+    width: 100%;
+    background-color: aquamarine;
+    height:100%;
+}
+body{
+   height: 100vh;
+   width: 100vw;
+}
+.courses_div{
+
+}

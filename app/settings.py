@@ -35,7 +35,7 @@ INSTALLED_APPS = [
     'accounts.apps.AccountsConfig',
     # registration of my app - crossroad 
     'crossroad.apps.CrossroadConfig',
-    #lessons app
+    # lessons app
     'lessons.apps.LessonsConfig',
 
 

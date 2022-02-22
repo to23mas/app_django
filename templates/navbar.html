@@ -1,18 +1,22 @@
 <nav class="navbar navbar-light navbar-expand-md bg-faded justify-content-center p-2 " style="background-color: #cbcbcb;">
     <a href="{% url 'crossroad:welcome' %}" class="navbar-brand d-flex w-50 mr-auto p-2">APP</a>
-
     <div class="navbar-collapse collapse w-100 text-dark " id="collapsingNavbar3">
-        <ul class="navbar-nav w-100 justify-content-center">
+        <ul class="navbar-nav w-100 justify-content-center nav-tabs">
             <li class="nav-item active">
-                <a class="nav-link" href="{% url 'crossroad:overview' %}">Courses</a>
+                <a class="nav-link {% if request.path == "/crossroad/overView/" %} active {% endif %}"
+                   href="{% url 'crossroad:overview' %}">Courses</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="{% url 'crossroad:welcome' %}">home</a>
+                <a class="nav-link {% if request.path == "/crossroad/" %} active {% endif %}"
+                   href="{% url 'crossroad:welcome' %}">home</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="{% url 'crossroad:about' %}">about</a>
+                <a class="nav-link {% if request.path == "/crossroad/about/" %} active {% endif %}"
+                   href="{% url 'crossroad:about' %}">about</a>
             </li>
         </ul>
+
+
         <ul class="nav navbar-nav  w-100 justify-content-end">
             <li class="nav-item">
                 <a class="nav-link" href="{% url 'accounts:logout' %}">Logout</a>

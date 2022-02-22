@@ -24,6 +24,8 @@ urlpatterns = [
     path('crossroad/', include('crossroad.urls')),
     # account app
     path('accounts/', include('accounts.urls')),
+    # lessons app
+    path('lessons/', include('lessons.urls')),
     # admin app
     path('admin/', admin.site.urls),
 ]

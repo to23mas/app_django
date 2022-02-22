@@ -53,9 +53,11 @@ def register_view(request):
 
 
 def logout_view(request):
-    if request.method == 'POST':
-        logout(request)
+
+    if request.user.is_anonymous:
         return redirect('accounts:welcome')
+    logout(request)
+    return redirect('accounts:welcome')
 
 
 def forgotten_password_view(request):

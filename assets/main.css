@@ -21,3 +21,19 @@ body{
 .courses_div{
 
 }
+.courses_cards{
+    width: 80%;
+    padding: 5px ;
+    padding-left: 20px;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: bisque;
+}
+.card_c{
+    display: inline-block;
+    background: #ce8888;
+    height: 350px;
+    width: 350px;
+    margin: 10px;
+
+}

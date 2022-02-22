@@ -2,10 +2,26 @@
 {% block content %}
 
 
-    {% for lesson in lessons %}
-        {{ lesson.lesson_name }}<br>
-    {% endfor %}
+ <div class="courses_cards">
 
+{% for lesson in lessons %}
+    <a href="about.html">
+        <div class="card_c">
+          <div class="card border-secondary mb-3" style="height: 100%;">
+            <div class="card-header">HEADER</div>
+            <div class="card-body text-secondary">
+              <h5 class="card-title">{{ lesson.lesson_name}}</h5>
+              <p class="card-text">{{ lesson.le_sum }}</p>
+            </div>
+            <div class="card-footer bg-transparent border-success">
+            Footer
+            </div>
+          </div>
+        </div>
+    </a>
+{% endfor %}
+
+ </div>
 
 
 {% endblock %}

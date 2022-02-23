@@ -2,16 +2,16 @@
 {% block content %}
 
 
-<div class="div100">
+{#<div class="div100">#}
   {% include 'sidebar.html' %}
+  {% include 'content.html' %}
     <div class="overview_course_lesson">
       <hr>
       <h1>Název lekce: {{ lesson.lesson_name }}</h1>
       <hr>
     </div>
 
-  <div class="overview_lesson_navigation"><hr>ffff</div>
-</div>
+ <div class="overview_lesson_navigation">ffff</div>
+{#</div>#}
 {% endblock %}
 {##}
-

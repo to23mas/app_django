@@ -6,6 +6,6 @@ app_name = 'lessons'
 
 urlpatterns = [
     path('<int:lesson_id>/welcome/', views.welcome_view, name='welcome'),
-
+    path('<int:lesson_id>/<str:chapter>', views.chapter_view, name='chapter')
 
 ]

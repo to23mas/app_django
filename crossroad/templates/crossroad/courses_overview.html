@@ -5,20 +5,35 @@
  <div class="courses_cards">
 
 {% for lesson in lessons %}
-  <div class="card_c">
-    <a href="{% url 'lessons:chapter' lesson.id  'intro'%}">
-      <div class="card border-secondary mb-3" style="height: 100%;">
+  {% if user in lesson.allowed.all %}
+    <div class="card_c">
+      <a href="{% url 'lessons:chapter' lesson.id 'intro' %}">
+      <div class="card bg-light mb-3" style="height: 100%;">
         <div class="card-header">HEADER</div>
         <div class="card-body text-secondary">
           <h5 class="card-title">{{ lesson.lesson_name }}</h5>
           <p class="card-text">{{ lesson.le_sum }}</p>
         </div>
-        <div class="card-footer bg-transparent border-success">
+        <div class="card-footer bg-transparent">
         Footer
         </div>
       </div>
-    </a>
-  </div>
+      </a>
+    </div>
+  {% else %}
+     <div class="card_c">
+      <div class="card text-white bg-secondary mb-3" style="height: 100%;">
+        <div class="card-header">HEADER</div>
+        <div class="card-body">
+          <h5 class="card-title">{{ lesson.lesson_name }}</h5>
+          <p class="card-text">{{ lesson.le_sum }}</p>
+        </div>
+        <div class="card-footer bg-transparent">
+        Footer
+        </div>
+      </div>
+    </div>
+  {% endif %}
 {% endfor %}
 
  </div>

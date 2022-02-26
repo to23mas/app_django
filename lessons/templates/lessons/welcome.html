@@ -3,10 +3,14 @@
 
 
 <div class="div100">
-  {% include 'sidebar.html' %}
+  {% include 'lessons/sidebar.html' %}
     <div class="overview_course_lesson">
       <hr>
       <h1>Název lekce: {{ lesson.lesson_name }}</h1>
+        <h2>{{ lesson.user }}</h2>
+        {% for user in lesson.allowed.all %}
+            <p>{{ user }}</p>
+        {% endfor %}
       <hr>
     </div>
 

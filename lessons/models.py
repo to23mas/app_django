@@ -9,7 +9,7 @@ class Lesson(models.Model):
     le_capitols = models.IntegerField()
     le_difficulty = models.IntegerField()
 
-    user = models.ManyToManyField(User)
+    allowed = models.ManyToManyField(User)
 
     tags = (
         ("LESSON", 'lesson'),
@@ -30,9 +30,10 @@ class Chapter(models.Model):
     )
     chapter_lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE)
     chapter_name = models.CharField(max_length=50)
+    chapter_link = models.CharField(max_length=25, default='')
     chapter_tag = models.CharField(max_length=10, default="READING", choices=tags)
 
-    user = models.ManyToManyField(User)
+    users = models.ManyToManyField(User)
 
     def __str__(self):
         return self.chapter_lesson.lesson_name + ' - ' + self.chapter_name

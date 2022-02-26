@@ -3,15 +3,15 @@
 
 
 <div class="div100">
-  {% include 'sidebar.html' %}
-  {% include 'content.html' %}
-    <div class="overview_course_lesson">
-      <hr>
-      <h1>Název lekce: {{ lesson.lesson_name }}</h1>
-      <hr>
-    </div>
+  {% include 'lessons/sidebar.html' %}
+  {% include 'lessons/lesson_header.html' %}
 
- <div class="overview_lesson_navigation">ffff</div>
+  {% if request.path|slice:"-5:" ==  'intro'%}
+      {% include 'lessons/content.html' %}
+      {% include 'lessons/requirements_goals.html' %}
+  {% endif %}
+
+    <div class="overview_lesson_navigation">help</div>
 </div>
 {% endblock %}
 {##}

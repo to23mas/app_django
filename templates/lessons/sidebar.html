@@ -4,7 +4,7 @@
 {# kapitoly #}
 {% for item in navbar %}
     <div class="side">
-        <a href="{% url 'lessons:chapter' lesson.id item.chapter_name %}">{{ item.chapter_name }}</a>
+        <a href="{% url 'lessons:chapter' lesson.id item.chapter_link %}">{{ item.chapter_name }}</a>
     </div>
     <hr>
 {% endfor %}

@@ -16,7 +16,9 @@ def welcome_view(request, lesson_id):
 # TODO
 def chapter_view(request, lesson_id, chapter):
     lesson = Lesson.objects.get(pk=lesson_id)
-    navbar = Chapter.objects.get(chapter_lesson_id=lesson_id)
+    navbar = Chapter.objects.filter(chapter_lesson_id=lesson_id).order_by('-id')
 
     return render(request, 'lessons/main.html', {'lesson': lesson,
-                                                 'navbar': navbar})
+                                                 'navbar': navbar,
+                                                 'chapter': chapter,
+                                                 })

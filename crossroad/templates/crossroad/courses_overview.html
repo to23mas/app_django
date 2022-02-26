@@ -5,20 +5,20 @@
  <div class="courses_cards">
 
 {% for lesson in lessons %}
-    <a href="{% url 'lessons:welcome' lesson.id %}">
-        <div class="card_c">
-          <div class="card border-secondary mb-3" style="height: 100%;">
-            <div class="card-header">HEADER</div>
-            <div class="card-body text-secondary">
-              <h5 class="card-title">{{ lesson.lesson_name}}</h5>
-              <p class="card-text">{{ lesson.le_sum }}</p>
-            </div>
-            <div class="card-footer bg-transparent border-success">
-            Footer
-            </div>
-          </div>
+  <div class="card_c">
+    <a href="{% url 'lessons:chapter' lesson.id  'intro'%}">
+      <div class="card border-secondary mb-3" style="height: 100%;">
+        <div class="card-header">HEADER</div>
+        <div class="card-body text-secondary">
+          <h5 class="card-title">{{ lesson.lesson_name }}</h5>
+          <p class="card-text">{{ lesson.le_sum }}</p>
         </div>
+        <div class="card-footer bg-transparent border-success">
+        Footer
+        </div>
+      </div>
     </a>
+  </div>
 {% endfor %}
 
  </div>

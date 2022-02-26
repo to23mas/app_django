@@ -27,10 +27,11 @@ class Chapter(models.Model):
     )
     chapter_lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE)
     chapter_name = models.CharField(max_length=50)
-    chapter_tab = models.CharField(max_length=10, default="READING", choices=tags)
+    chapter_tag = models.CharField(max_length=10, default="READING", choices=tags)
 
     def __str__(self):
         return self.chapter_lesson.lesson_name + ' - ' + self.chapter_name
+
 
 class Requirements(models.Model):
     req_lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE)

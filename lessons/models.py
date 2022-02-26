@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 
 class Lesson(models.Model):
@@ -7,6 +8,8 @@ class Lesson(models.Model):
     le_long_sum = models.CharField(max_length=10000, default='')
     le_capitols = models.IntegerField()
     le_difficulty = models.IntegerField()
+
+    user = models.ManyToManyField(User)
 
     tags = (
         ("LESSON", 'lesson'),
@@ -29,6 +32,8 @@ class Chapter(models.Model):
     chapter_name = models.CharField(max_length=50)
     chapter_tag = models.CharField(max_length=10, default="READING", choices=tags)
 
+    user = models.ManyToManyField(User)
+
     def __str__(self):
         return self.chapter_lesson.lesson_name + ' - ' + self.chapter_name
 
@@ -47,3 +52,5 @@ class Goals(models.Model):
 
     def __str__(self):
         return self.goal_lesson.lesson_name + ' - ' + self.goal
+
+

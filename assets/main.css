@@ -64,6 +64,11 @@ body{
                 rgba(60, 64, 67, 0.15) 0 2px 6px 2px;
 }
 
+.goal_req{
+    float:left;
+
+}
+
 .overview_big_card{
     width: 77%;
     height: 80%;

@@ -5,13 +5,14 @@
 <div class="div100">
   {% include 'lessons/sidebar.html' %}
   {% include 'lessons/lesson_header.html' %}
+    <div class="overview_lesson_navigation">help</div>
+
 
   {% if request.path|slice:"-5:" ==  'intro'%}
-      {% include 'lessons/content.html' %}
       {% include 'lessons/requirements_goals.html' %}
+      {% include 'lessons/content.html' %}
   {% endif %}
 
-    <div class="overview_lesson_navigation">help</div>
 </div>
 {% endblock %}
 {##}

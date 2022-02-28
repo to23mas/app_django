@@ -4,6 +4,7 @@ from django.contrib.auth.forms import AuthenticationForm, PasswordResetForm
 from django.contrib.auth import login, logout
 from .forms import CustomUserForm
 from .validation import Validate
+from lessons.unlock import Aviability_Handler
 
 
 def login_view(request):
@@ -44,7 +45,7 @@ def register_view(request):
         if form.is_valid():
             user = form.save()
             login(request, user)  # přihlášení uživatele
-            #  log the user in
+            Aviability_Handler.unlock_default(user) #odemik8 u6ivateli prvni dve lekce
             return redirect('crossroad:welcome')
     else:
         form = CustomUserForm()
@@ -53,7 +54,6 @@ def register_view(request):
 
 
 def logout_view(request):
-
     if request.user.is_anonymous:
         return redirect('accounts:welcome')
     logout(request)

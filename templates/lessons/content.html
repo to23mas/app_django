@@ -1,6 +1,18 @@
-
+{% for item in content %}
 <div class="lesson_chapter">
-    <hr>
-    v tomto místě by měl být popis, toho co se bude děla a mělo by to být brané z databáze
-    <hr>
+  <hr>
+    <h3>{{ item.content_header }}</h3>
+  <hr>
+    <p>
+        {{ item.content_text }}
+    </p>
+    {% if forloop.last %}
+      <form method="post">
+        {% csrf_token %}
+         <button class="button ">unlock next</button>
+      </form>
+    {% endif %}
+
+<hr>
 </div>
+{% endfor %}

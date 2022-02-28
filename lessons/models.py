@@ -33,7 +33,7 @@ class Chapter(models.Model):
     chapter_link = models.CharField(max_length=25, default='')
     chapter_tag = models.CharField(max_length=10, default="READING", choices=tags)
 
-    users = models.ManyToManyField(User)
+    allowed = models.ManyToManyField(User)
 
     def __str__(self):
         return self.chapter_lesson.lesson_name + ' - ' + self.chapter_name
@@ -55,3 +55,10 @@ class Goals(models.Model):
         return self.goal_lesson.lesson_name + ' - ' + self.goal
 
 
+class Content(models.Model):
+    content_chapter = models.ForeignKey(Chapter, on_delete=models.CASCADE)
+    content_header = models.CharField(max_length=50, default='')
+    content_text = models.CharField(max_length=500, default='')
+
+    def __str__(self):
+        return str(self.content_chapter) + ' - ' + self.content_header

@@ -82,6 +82,14 @@ body{
         box-shadow: rgba(0, 0, 0, 0.55) 0 1px 2px 0,
                     rgba(105, 103, 103, 0.68) 0 3px 6px 2px;
 }
+.green{
+    background-color: greenyellow;
+
+}
+.red{
+    background-color: red;
+}
+
 
 /*8*******************animated link**********/
 .side {

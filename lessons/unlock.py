@@ -1,26 +1,23 @@
 from django.contrib.auth.models import User
-from .models import Lesson, Chapter
+from .models import  Chapter
 
 
 class Aviability_Handler:
 
     @staticmethod
-    def unlock_lesson(lesson: Lesson, user: User) -> None:
-        lesson.allowed.add(user)
+    def unlock_lesson(lesson_id: int, user: User) -> None:
+        user.groups.add(lesson_id)
 
     @staticmethod
     def unlock_default(user: User) -> None:
-        lesson_one = Lesson.objects.get(id=1)
-        lesson_two = Lesson.objects.get(id=2)
 
-        chapters_one = Chapter.objects.get(id=4)
-        chapters_two = Chapter.objects.get(id=5)
+        user.groups.add(1)
+        user.groups.add(2)
 
-        lesson_one.allowed.add(user)
-        lesson_two.allowed.add(user)
+        Chapter.objects.get(id=4).allowed.add(user)
+        Chapter.objects.get(id=5).allowed.add(user)
 
-        chapters_one.allowed.add(user)
-        chapters_two.allowed.add(user)
+
 
 
     @staticmethod

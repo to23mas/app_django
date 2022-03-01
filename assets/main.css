@@ -53,6 +53,19 @@ body{
     height: 300px;
     background-color: orange;
 }
+/*div pro n8ázev lekce a názvu kapitoly*/
+.lesson_chapter_header{
+    margin: 0 15px;
+    margin-bottom: 15px;
+    float: left;
+    text-align: center;
+    width : 65%;
+    background-color: #ffd351;
+    border-radius: 25px;
+    box-shadow: rgba(60, 64, 67, 0.3) 0 1px 2px 0,
+                rgba(60, 64, 67, 0.15) 0 2px 6px 2px;
+}
+/*box pro dla6dice uvnit5 lekce*/
 .lesson_chapter{
     margin: 0 15px;
     margin-bottom: 15px;

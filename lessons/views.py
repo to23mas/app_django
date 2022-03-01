@@ -30,13 +30,12 @@ def chapter_view(request, lesson_id, chapter_name):
     goals = Goals.objects.filter(goal_lesson_id=lesson_id)
 
     # tohle není uplně obratné..... hledám id abych pak našel content možná půjde přes ORM TODO
-    id_for_pk = Chapter.objects.get(chapter_lesson_id=lesson_id, chapter_link=chapter_name).id
-    content = Content.objects.filter(content_chapter_id=id_for_pk)
+    chapter = Chapter.objects.get(chapter_lesson_id=lesson_id, chapter_link=chapter_name)
 
     return render(request, 'lessons/main.html', {'lesson': lesson,
                                                  'chapters': chapters,
-                                                 'chapter': chapter_name,
+                                                 'chapter_name': chapter_name,
                                                  'requirements': requirements,
                                                  'goals': goals,
-                                                 'content': content,
+                                                 'chapter': chapter
                                                  })

@@ -4,15 +4,14 @@ from django.contrib.auth.models import User
 
 class Lesson(models.Model):
     lesson_name = models.CharField(max_length=200)
+    lesson_group = models.CharField(max_length=30, default='')
     le_short_sum = models.CharField(max_length=500, default='')
     le_long_sum = models.CharField(max_length=10000, default='')
     le_capitols = models.IntegerField()
     le_difficulty = models.IntegerField()
 
-    allowed = models.ManyToManyField(User)
-
     tags = (
-        ("LESSON", 'lesson'),
+        ("LESSON", 'lekce'),
         ("PROJECT", 'project')
     )
 

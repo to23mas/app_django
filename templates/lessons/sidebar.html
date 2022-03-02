@@ -4,7 +4,7 @@
 {# kapitoly #}
 {% for item in chapters %}
     <div class="side">
-    {% if user in item.allowed.all %}
+    {% if user.progress.lesson01 >= item.chapter_order %}
         <a href="{% url 'lessons:chapter' lesson.id item.chapter_link %}">{{ item.chapter_name }}</a>
     {% else %}
       {{ item.chapter_name }} {#co třeba ikony zámku TODO#}

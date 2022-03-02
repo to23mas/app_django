@@ -28,6 +28,7 @@ class Chapter(models.Model):
         ("EXERCISE", "exercise")
     )
     chapter_lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE)
+    chapter_order = models.IntegerField(blank=True, null=True)
     chapter_name = models.CharField(max_length=50)
     chapter_link = models.CharField(max_length=25, default='')
     chapter_tag = models.CharField(max_length=10, default="READING", choices=tags)
@@ -61,3 +62,18 @@ class Content(models.Model):
 
     def __str__(self):
         return str(self.content_chapter) + ' - ' + self.content_header
+
+
+class Progress(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
+    lesson01 = models.IntegerField(default=1)
+    lesson02 = models.IntegerField(blank=True, null=True)
+    lesson03 = models.IntegerField(blank=True, null=True)
+    lesson04 = models.IntegerField(blank=True, null=True)
+    lesson05 = models.IntegerField(blank=True, null=True)
+    lesson06 = models.IntegerField(blank=True, null=True)
+    lesson07 = models.IntegerField(blank=True, null=True)
+    lesson08 = models.IntegerField(blank=True, null=True)
+
+    def __str__(self):
+        return self.user.username

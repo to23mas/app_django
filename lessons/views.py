@@ -4,11 +4,11 @@ from django.contrib.auth.decorators import login_required
 from lessons.models import Lesson, Chapter, Requirements, Goals, Content
 from .allowed import is_user_allowed
 from .unlock import Aviability_Handler, Checker
+from .load_data_class import LessonData
 
 
 @login_required(login_url='/accounts/login/')
 def switch_view(request, lesson_id, chapter_link):
-
     if lesson_id == 1:
         return redirect('lessons:lessonOne', chapter_link=chapter_link)
 
@@ -29,43 +29,46 @@ def switch_view(request, lesson_id, chapter_link):
 
 
 def lessonOne_view(request, chapter_link):
-    lesson_id = 1
-    user = request.user
-    chapter = Chapter.objects.get(chapter_lesson_id=lesson_id, chapter_link=chapter_link)
-    is_complete = Checker.is_chapter_completed(user, lesson_id, chapter.chapter_order)
+    data = LessonData(1, chapter_link, request.user)
+
     test_form_text = ''
     # odkliknutí tlačítka přečteno
     if request.method == 'POST':
         if 'read' in request.POST:
-            chapter = Aviability_Handler.unlock_chapter_by_reading(user, chapter.chapter_order, lesson_id)
-            return redirect('lessons:chapter', lesson_id=lesson_id, chapter_link=chapter.chapter_link)
+            data.set_chapter(Aviability_Handler.unlock_chapter_by_reading
+                             (data.user, data.chapter.chapter_order, data.lesson.id))
+            return redirect('lessons:chapter', lesson_id=data.lesson.id, chapter_link=data.chapter.chapter_link)
         elif 'text' in request.POST:
-            if Aviability_Handler.unlock_by_text(request.POST['text'], user):
+            if Aviability_Handler.unlock_by_text(request.POST['text'], data.user):
                 return redirect('crossroad:overview')
             test_form_text = 'Tak takhle se asi nejmenuješ'
 
     # TODO ještě vyhodit uživatele z kapitoly ne jenom z lekce
-    if not is_user_allowed(request.user, lesson_id, chapter):
+    if not is_user_allowed(data.user, data.lesson.id, data.chapter):
         return render(request, 'crossroad/welcome.html')
 
-    lesson = Lesson.objects.get(pk=lesson_id)
-    chapters = Chapter.objects.filter(chapter_lesson_id=lesson_id).order_by('-id')
-    requirements = Requirements.objects.filter(req_lesson_id=lesson_id)
-    goals = Goals.objects.filter(goal_lesson_id=lesson_id)
-
-    return render(request, 'lessons/uvod.html', {'lesson': lesson,
-                                                 'chapters': chapters,
+    return render(request, 'lessons/uvod.html', {'lesson': data.lesson,
+                                                 'chapters': data.chapters,
                                                  'chapter_link': chapter_link,
-                                                 'requirements': requirements,
-                                                 'goals': goals,
-                                                 'chapter': chapter,
-                                                 'is_complete': is_complete,
+                                                 'requirements': data.requirements,
+                                                 'goals': data.goals,
+                                                 'chapter': data.chapter,
+                                                 'is_complete': data.chapter_is_complete,
                                                  'form_fail': test_form_text
                                                  })
 
 
-def lessonTwo_view(request,  chapter_link):
-    return render(request, 'lessons/setup.html')
+def lessonTwo_view(request, chapter_link):
+    data = LessonData(2, chapter_link, request.user)
+
+    return render(request, 'lessons/setup.html', {'lesson': data.lesson,
+                                                  'chapters': data.chapters,
+                                                  'chapter_link': chapter_link,
+                                                  'requirements': data.requirements,
+                                                  'goals': data.goals,
+                                                  'chapter': data.chapter,
+                                                  'is_complete': data.chapter_is_complete,
+                                                  })
 
 
 def not_view(request, not_):

@@ -17,6 +17,8 @@ class Lesson(models.Model):
 
     le_tag = models.CharField(max_length=10, choices=tags, default="LESSON")
 
+    ordering = ['id']
+
     def __str__(self):
         return self.lesson_name
 
@@ -34,6 +36,8 @@ class Chapter(models.Model):
     chapter_tag = models.CharField(max_length=10, default="READING", choices=tags)
 
     allowed = models.ManyToManyField(User)
+
+    ordering = ['chapter_lesson']
 
     def __str__(self):
         return self.chapter_lesson.lesson_name + ' - ' + self.chapter_name
@@ -62,8 +66,10 @@ class Content(models.Model):
     content_text = models.CharField(max_length=500, default='')
     content_html = models.TextField(max_length=10000, default='', blank=True, null=True)
 
+    ordering = ['content_order']
+
     def __str__(self):
-        return   str(self.content_chapter) + ' - ' + str(self.content_order) + ' - ' + self.content_header
+        return str(self.content_chapter) + ' - ' + str(self.content_order) + ' - ' + self.content_header
 
 
 class Progress(models.Model):

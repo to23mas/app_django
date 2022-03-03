@@ -3,16 +3,29 @@
   <hr>
     <h3>{{ item.content_header }}</h3>
   <hr>
-    <p>
-        {{ item.content_text }}
-    </p>
-    {% if forloop.last %}
+
+{# lekce 01 kapitola 2  -lekce a projekty (zde jsou potřeba dlaždice) #}
+        <p> {{item.content_html|safe  }} </p>
+{#{% include 'helper.html' %}#}
+       <p> {{ item.content_text }} </p>
+    {% if forloop.last and not is_complete and chapter.chapter_tag == 'reading' %}
       <form method="post">
         {% csrf_token %}
-         <button class="button ">unlock next</button>
+         <button class="button" value="read">unlock next</button>
+      </form>
+    {% endif %}
+
+    {% if forloop.last and not is_complete and chapter.chapter_tag == 'TEST' %}
+        <form method="post">
+        {% csrf_token %}
+          <label for="text">Tvuje odpověď: </label>
+            <input id="text" type="text" name="text">
+         <button class="button" value="text">send to check</button>
+        {{ form_fail }}
       </form>
     {% endif %}
 
 <hr>
 </div>
 {% endfor %}
+

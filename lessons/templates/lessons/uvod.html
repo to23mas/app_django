@@ -2,20 +2,20 @@
 {% block content %}
 
 
-<div class="div100">
 
   {% include 'lessons/sidebar.html' %}
   {% include 'lessons/lesson_header.html' %}
 
-{#  {% if user in  chapter.completed.all %}#}
-    <div class="overview_lesson_navigation">{{ user.groups.all }}</div>
-{#  {% endif %}#}
+  {% if is_complete %}
+    <div class="overview_lesson_navigation">Kapitola je hotová</div>
+  {% endif %}
 
   {% if request.path|slice:"-5:" == 'intro'%}
       {% include 'lessons/requirements_goals.html' %}
-      {% include 'lessons/content.html' %}
-  {% endif %}
 
-</div>
+
+  {% endif %}
+      {% include 'lessons/content.html' %}
+
 {% endblock %}
 {##}

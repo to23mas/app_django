@@ -5,5 +5,9 @@ from . import views
 app_name = 'lessons'
 
 urlpatterns = [
-    path('lesson<int:lesson_id>/<str:chapter_name>', views.chapter_view, name='chapter'),
+    path('lesson/<int:lesson_id>/<str:chapter_link>', views.switch_view, name='switch'),
+    path('lesson/UVOD/<str:chapter_link>', views.lessonOne_view, name='lessonOne'),
+    path('lesson/HELLO/<str:chapter_link>', views.lessonTwo_view, name='lessonTwo'),
+    path('lesson/<str:not_>', views.not_view, name='not'),
 ]
+

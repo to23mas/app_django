@@ -9,7 +9,7 @@ class Lesson(models.Model):
     le_long_sum = models.CharField(max_length=10000, default='')
     le_capitols = models.IntegerField()
     le_difficulty = models.IntegerField()
-
+    le_view = models.CharField(max_length=30, blank=True, null=True)
     tags = (
         ("LESSON", 'lekce'),
         ("PROJECT", 'project')
@@ -57,11 +57,13 @@ class Goals(models.Model):
 
 class Content(models.Model):
     content_chapter = models.ForeignKey(Chapter, on_delete=models.CASCADE)
+    content_order = models.IntegerField(blank=True, null=True)
     content_header = models.CharField(max_length=50, default='')
     content_text = models.CharField(max_length=500, default='')
+    content_html = models.TextField(max_length=10000, default='', blank=True, null=True)
 
     def __str__(self):
-        return str(self.content_chapter) + ' - ' + self.content_header
+        return   str(self.content_chapter) + ' - ' + str(self.content_order) + ' - ' + self.content_header
 
 
 class Progress(models.Model):

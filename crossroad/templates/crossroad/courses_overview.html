@@ -10,7 +10,7 @@
 {#  {% if user in lesson.groups.all %}#}
     {% if user|has_group:lesson.lesson_group %}
     <div class="card_c">
-      <a href="{% url 'lessons:chapter' lesson.id 'intro' %}">
+      <a href="{% url 'lessons:switch' lesson.id 'intro' %}">
       <div class="card bg-light mb-3" style="height: 100%;">
         <div class="card-header">{{ lesson.le_tag }}</div>
         <div class="card-body text-secondary">

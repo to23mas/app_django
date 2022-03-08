@@ -18,7 +18,7 @@ def courses_overview_view(request):
     cols = [i for i in range(4)]
     return render(request, 'crossroad/courses_overview.html', {'lessons': list_courses,
                                                                'rows': rows,
-                                                               'cols': cols, })
+                                                               'cols': cols })
 
 
 @login_required(login_url='/accounts/login/')

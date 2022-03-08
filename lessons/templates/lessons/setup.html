@@ -6,9 +6,7 @@
   {% include 'lessons/sidebar.html' %}
   {% include 'lessons/lesson_header.html' %}
 
-  {% if is_complete %}
-    <div class="overview_lesson_navigation">Kapitola je hotová</div>
-  {% endif %}
+
 
   {% if request.path|slice:"-5:" == 'intro'%}
       {% include 'lessons/requirements_goals.html' %}

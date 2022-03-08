@@ -8,8 +8,24 @@
 
 {% for lesson in lessons %}
 {#  {% if user in lesson.groups.all %}#}
-    {% if user|has_group:lesson.lesson_group %}
+    {% if user|has_group:lesson.lesson_group and user|is_competed:lesson %}
     <div class="card_c">
+
+      <a href="{% url 'lessons:switch' lesson.id 'intro' %}">
+      <div class="card text-white bg-success mb-3" style="height: 100%;">
+        <div class="card-header">{{ lesson.le_tag }}</div>
+        <div class="card-body text-white ">
+          <h5 class="card-title">{{ lesson.lesson_name }}</h5>
+          <p class="card-text">{{ lesson.le_short_sum }}</p>
+        </div>
+        <div class="card-footer bg-transparent">
+        Footer
+        </div>
+      </div>
+      </a>
+    </div>
+  {% elif user|has_group:lesson.lesson_group %}
+        <div class="card_c">
       <a href="{% url 'lessons:switch' lesson.id 'intro' %}">
       <div class="card bg-light mb-3" style="height: 100%;">
         <div class="card-header">{{ lesson.le_tag }}</div>

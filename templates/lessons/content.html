@@ -1,31 +1,34 @@
 {% for item in chapter.content_set.all %}
-<div class="lesson_chapter">
-  <hr>
-    <h3>{{ item.content_header }}</h3>
-  <hr>
+<div class="lesson_chapter" style="margin-left: 50px;">
+  <hr class="content">
+    <h3 style="margin-left: 60px;">{{ item.content_header }}</h3>
+
 
 {# lekce 01 kapitola 2  -lekce a projekty (zde jsou potřeba dlaždice) #}
-        <p> {{item.content_html|safe  }} </p>
+       <p> {{ item.content_html|safe }} </p>
 {#{% include 'helper.html' %}#}
        <p> {{ item.content_text }} </p>
-    {% if forloop.last and not is_complete and chapter.chapter_tag == 'reading' %}
-      <form method="post">
+    {% if forloop.last and not is_complete and chapter.chapter_tag == 'READING' %}
+      <form method="POST">
         {% csrf_token %}
-         <button class="button" value="read">unlock next</button>
+         <button value="read">Další kapitola<span></span></button>
       </form>
     {% endif %}
 
     {% if forloop.last and not is_complete and chapter.chapter_tag == 'TEST' %}
-        <form method="post">
+        <form method="POST">
         {% csrf_token %}
           <label for="text">Tvuje odpověď: </label>
             <input id="text" type="text" name="text">
-         <button class="button" value="text">send to check</button>
+            <button value="text"><span>send to check</span></button>
         {{ form_fail }}
+
       </form>
+
     {% endif %}
 
-<hr>
+<hr class="content">
+
 </div>
 {% endfor %}
 

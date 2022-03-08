@@ -1,3 +1,25 @@
+a:link {
+  color: black;
+  background-color: transparent;
+  text-decoration: none;
+}
+a:visited {
+  color: black;
+  background-color: transparent;
+  text-decoration: none;
+}
+
+a:hover {
+  color: red;
+  background-color: transparent;
+  text-decoration: underline;
+}
+
+a:active {
+  color: yellow;
+  background-color: transparent;
+  text-decoration: underline;
+}
 .div20{
     width: 10%;
     height:100%;
@@ -19,12 +41,7 @@ body{
    height: 100vh;
    width: 100vw;
 }
-.side_nav{
-    width: 125px;
-    height: 100%;
-    float: left;
-    background-color: greenyellow;
-}
+
 .courses_cards{
     width: 80%;
     padding: 5px ;
@@ -59,7 +76,7 @@ body{
     float: right;
     text-align: center;
     width : 73%;
-    background-color: #ffd351;
+    /*background-color: #ffd351;*/
     border-radius: 25px;
     box-shadow: rgba(60, 64, 67, 0.3) 0 1px 2px 0,
                 rgba(60, 64, 67, 0.15) 0 2px 6px 2px;
@@ -69,22 +86,43 @@ body{
     margin: 0 150px 15px 0;
     float: right;
     width : 73%;
-    background-color: #ffd351;
+    padding-left: 60px;
+    /*background-color: #ffd351;*/
     border-radius: 25px;
     box-shadow: rgba(60, 64, 67, 0.3) 0 1px 2px 0,
                 rgba(60, 64, 67, 0.15) 0 2px 6px 2px;
 }
+hr.content{
+    width: 80%;
+    margin: 10px auto;
+    height: 13px;
+    background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));
 
+}
+p{
+    padding: 0 60px;
+}
+
+.two_divs_to_center{
+    width: 40%;
+    margin: 0 auto;
+
+
+}
 .goal_req{
-    float:left;
+    display: inline-block;
+    vertical-align: top;
 
 }
 
-.overview_big_card{
-    width: 77%;
-    height: 80%;
-    margin: 65px auto;
-    border-radius: 25px;
+.completed{
+    width: 80px;
+    height: 80px;
+    margin: 0 auto;
+    text-align: center;
+    vertical-align: center;
+    border-radius: 50%;
+    background-color: rgba(12, 232, 95, 0.61);
     box-shadow: rgba(60, 64, 67, 0.3) 0 1px 2px 0,
                 rgba(60, 64, 67, 0.15) 0 2px 6px 2px;
 }
@@ -103,32 +141,19 @@ body{
 
 
 /*8*******************animated link**********/
-.side {
+.side{
     margin: 5px;
     width: 90%;
 }
-.side a {
-  position: relative;
+.side_border{
+    margin-left: 15px;
+    width: 300px;
+    height: 300px;
+    float: left;
+    border: 1px solid black;
 }
 
-.side a::before {
-    content: '';
-    position: absolute;
-    width: 100%;
-    height: 4px;
-    border-radius: 4px;
-    background-color: #18272F;
-    bottom: 0;
-    left: 0;
-    transform-origin: right;
-    transform: scaleX(0);
-    transition: transform .3s ease-in-out;
-  }
 
-.side a:hover::before {
-  transform-origin: left;
-  transform: scaleX(1);
-}
 
 .extend_to_bottom{
     width:100%;
@@ -194,4 +219,58 @@ body{
   font-size:13px;
   color:#aaa;
   margin-bottom:0;
+}
+
+/* From cssbuttons.io by @adamgiebl */
+button {
+ border: none;
+ display: block;
+ position: relative;
+ padding: 0.7em 2.4em;
+ font-size: 18px;
+ background: transparent;
+ cursor: pointer;
+ user-select: none;
+ overflow: hidden;
+ color: royalblue;
+ z-index: 1;
+ font-family: inherit;
+ font-weight: 500;
+}
+
+button span {
+ position: absolute;
+ left: 0;
+ top: 0;
+ width: 100%;
+ height: 100%;
+ background: transparent;
+ z-index: -1;
+ border: 4px solid royalblue;
+}
+
+button span::before {
+ content: "";
+ display: block;
+ position: absolute;
+ width: 8%;
+ height: 500%;
+ top: 50%;
+ left: 50%;
+ transform: translate(-50%, -50%) rotate(-60deg);
+ transition: all 0.3s;
+}
+
+button:hover span::before {
+ transform: translate(-50%, -50%) rotate(-90deg);
+ width: 100%;
+ background: royalblue;
+}
+
+button:hover {
+ color: white;
+}
+
+button:active span::before {
+ background: #2751cd;
 }

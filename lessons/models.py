@@ -40,7 +40,7 @@ class Chapter(models.Model):
     ordering = ['chapter_lesson']
 
     def __str__(self):
-        return self.chapter_lesson.lesson_name + ' - ' + self.chapter_name
+        return self.chapter_lesson.lesson_name + ' - ' + self.chapter_name + ' - ' + str(self.chapter_order)
 
 
 class Requirements(models.Model):

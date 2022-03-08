@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     'crossroad.apps.CrossroadConfig',
     # lessons app
     'lessons.apps.LessonsConfig',
+    #iconky
+    'django_static_fontawesome',
 
 
     'django.contrib.admin',

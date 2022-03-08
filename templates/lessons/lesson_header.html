@@ -1,6 +1,17 @@
 <div class="lesson_chapter_header">
-      <hr>
-      <h1>Název lekce: {{ lesson.lesson_name }}</h1>
-      <hr>
-      <h3>název kapitoly: {{ chapter.chapter_name }}</h3>
+    <div style="width: 33%; margin:auto;">
+      <hr class="content">
+      <h1 style="display: inline;">{{ lesson.lesson_name }}</h1> <h3 style="display: inline;"> - {{ chapter.chapter_name }}</h3>
+
+      <hr class="content">
+         {% if is_complete %}
+            <div class="completed"><i class="fa fa-check" style="font-size:48px; padding-top:  15px;" aria-hidden="true"></i>
+            </div>
+            <hr class="content">
+
+
+        {% endif %}
+
+    </div>
+
 </div>

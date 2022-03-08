@@ -2,6 +2,7 @@ from django.contrib.auth.models import User
 from django.forms import Form
 
 from .models import Chapter, Progress
+from lessons.load_data_class import LessonData
 
 
 class Aviability_Handler:
@@ -17,12 +18,12 @@ class Aviability_Handler:
         Progress(user=user).save()
 
     @staticmethod
-    def unlock_chapter_by_reading(user: User, chapter_order: int, lesson_id: int) -> str:
-        #nazev nadchazejic9 kapitoly pro redirect TODO pro poslední kapitolu
-        next_chapter = Chapter.objects.get(chapter_lesson_id=lesson_id, chapter_order=chapter_order + 1)
-
-        #adding one to progress
-        if lesson_id == 1:
+    def unlock_chapter_by_reading(user: User, data: LessonData) -> str:
+        # nazev nadchazejic9 kapitoly pro redirect TODO pro poslední kapitolu
+        next_chapter = Chapter.objects.get(chapter_lesson_id=data.lesson.id,
+                                           chapter_order=data.chapter.chapter_order + 1).chapter_link
+        # adding one to progress
+        if data.lesson.id == 1:
             user.progress.lesson01 += 1
             user.progress.save()
             user.save()
@@ -30,28 +31,18 @@ class Aviability_Handler:
         return next_chapter
 
     @staticmethod
-    def unlock_by_text(test: str, user: User):
+    def unlock_by_text(test: str, user: User) -> bool:
 
         if user.username == test:
             user.progress.lesson01 += 1
             user.progress.save()
             user.save()
             return True
-
         return False
-
-
-class Checker:
 
     @staticmethod
-    def is_chapter_completed(user: User, lesson_id: int, chapter_order: int) -> bool:
-
-        user_progress = 0
-
-        if lesson_id == 1:
-            user_progress = user.progress.lesson01  # tabulka progress
-
-        # podm9nka pro hledání, jestli už uživatel lekci splnil
-        if chapter_order + 1 <= user_progress:
+    def lesson_is_completed(user: int, data: int) -> bool:
+        if user == data:
             return True
         return False
+

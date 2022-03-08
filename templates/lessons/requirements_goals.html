@@ -1,15 +1,18 @@
 <div class="lesson_chapter">
-  <hr>
-    <div class="goal_req" style="margin-right: 20px">
+  <hr class="content">
+
+    <div class="two_divs_to_center">
+    <div class="goal_req" style="float: left;">
       <ul>
       <h2>co je potřeba</h2>
       {% for req in requirements %}
+
         <li>{{ req }}</li>
       {% endfor %}
       </ul>
     </div>
 
-  <div class="goal_req" style="border-left: 2px solid black; ">
+  <div class="goal_req" style="float: right;">
     <ul>
     <h2>cíle kapitoly</h2>
       {% for goal in goals %}
@@ -17,6 +20,8 @@
       {% endfor %}
     </ul>
   </div>
-  <hr>
+
+</div>
+  <hr class="content">
 
 </div>

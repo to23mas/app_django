@@ -32,12 +32,15 @@ def lessonOne_view(request, chapter_link):
     data = LessonData(1, chapter_link, request.user)
 
     test_form_text = ''
+
     # odkliknutí tlačítka přečteno
     if request.method == 'POST':
         if 'text' in request.POST:
             if Aviability_Handler.unlock_by_text(request.POST['text'], data.user):
                 data.set_chapter(data.get_next_chapter())
             test_form_text = 'Tak takhle se asi nejmenuješ'
+        elif 'exam' in request.POST:
+            return redirect('exams:exam', lesson_id=data.lesson.id)
         else:
             next_lesson = Aviability_Handler.unlock_chapter_by_reading(data.user, data)
             if Aviability_Handler.lesson_is_completed(data.user.progress.lesson01, data.lesson.le_capitols):

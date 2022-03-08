@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block content %}
+
+
+
+  {% include 'lessons/sidebar.html' %}
+  {% include 'lessons/lesson_header.html' %}
+
+
+
+  {% if request.path|slice:"-5:" == 'intro'%}
+      {% include 'lessons/requirements_goals.html' %}
+
+
+  {% endif %}
+      {% include 'lessons/content.html' %}
+
+{% endblock %}

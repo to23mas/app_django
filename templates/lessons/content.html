@@ -15,14 +15,22 @@
       </form>
     {% endif %}
 
-    {% if forloop.last and not is_complete and chapter.chapter_tag == 'TEST' %}
+    {% if forloop.last and not is_complete and chapter.chapter_tag == 'TEXT' %}
         <form method="POST">
         {% csrf_token %}
           <label for="text">Tvuje odpověď: </label>
             <input id="text" type="text" name="text">
-            <button value="text"><span>send to check</span></button>
+            <button value="text">Odeslat<span></span></button>
         {{ form_fail }}
 
+      </form>
+
+    {% endif %}
+
+    {% if forloop.last and not is_complete and chapter.chapter_tag == 'EXAM' %}
+        <form method="POST">
+        {% csrf_token %}
+            <button value="exam" type="submit" name="exam">Jít na test<span></span></button>
       </form>
 
     {% endif %}

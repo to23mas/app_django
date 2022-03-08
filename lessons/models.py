@@ -26,8 +26,8 @@ class Lesson(models.Model):
 class Chapter(models.Model):
     tags = (
         ("READING", 'reading'),
-        ("TEST", "test"),
-        ("EXERCISE", "exercise")
+        ("TEXT", "text"),
+        ("EXAM", "exam")
     )
     chapter_lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE)
     chapter_order = models.IntegerField(blank=True, null=True)

@@ -5,5 +5,5 @@ from .models import Exam, Question, Answer, UserExamProgress
 
 admin.site.register(Exam)
 admin.site.register(Question)
-admin.site.register(Answer)
 admin.site.register(UserExamProgress)
+admin.site.register(Answer)

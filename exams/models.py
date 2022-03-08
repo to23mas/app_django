@@ -13,7 +13,7 @@ class Exam(models.Model):
 
 class Question(models.Model):
     exam_sets = models.ForeignKey(Exam, on_delete=models.CASCADE)
-    question_task = models.CharField(max_length=200)
+    exam_task = models.CharField(max_length=200)
     tags = (
         ("MULTI", 'multi'),
         ("SINGLE", "single"),
@@ -22,11 +22,11 @@ class Question(models.Model):
     type_tag = models.CharField(max_length=10, default="SINGLE", choices=tags)
 
     def __str__(self):
-        return self.question_task[0:10]
+        return self.exam_task[0:10]
 
 
-class Answer:
-    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+class Answer(models.Model):
+    question_id = models.ForeignKey(Question, on_delete=models.CASCADE)
     question_text = models.CharField(max_length=1000)
     tags = (
         ("RIGHT", 'right'),

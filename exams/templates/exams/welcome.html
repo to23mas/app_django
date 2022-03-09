@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block content %}
+
+    <div class="overview_big_card">
+      <h1>{{ exam.exam_header }}</h1>
+      <p>{{ exam.exam_intro }}</p>
+      <hr>
+      <p>čas: {{ exam.exam_time }}</p>
+      <hr>
+      <a href="{% url 'exams:exam'  lesson_id %}">
+        <button class="center">Psát test<span></span></button>
+      </a>
+    </div>
+{% endblock %}

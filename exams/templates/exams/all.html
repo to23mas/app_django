@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block content %}
+
+
+{% if not exams.empty %}
+     <div class="overview_big_card">
+    {% for exam in exams.aviable %}
+      <div class="two_divs_to_center">
+        <div>
+            <hr>
+            <a href="{% url 'exams:welcome' exam.id %}">
+              <h4>{{ exam }}</h4>
+            </a>
+            <hr>
+        </div>
+      </div>
+
+    {% endfor %}
+    {% for exam in exams.completed %}
+       <div class="two_divs_to_center">
+        <hr>
+         <div class="completed" style="height:35px; width:35px; float: left">
+             <i class="fa fa-check-circle" style="padding-top: 10px;" aria-hidden="true"></i>
+         </div>
+         <div>
+           <h4 style="padding-top: 4px;">{{ exam }}</h4>
+        <hr>
+
+         </div>
+       </div>
+        {% empty %}
+        {% endfor %}
+    </div>
+{% else %}
+
+  <div  class="overview_big_card bg_redish">
+    <h1 class="text-muted">V tuto chvíli nemáš žádný dostupný test</h1>
+    <p>
+        V horní liště klikni "COURSES" a pak na dostupnou lekci. Po konci lekce se ti odemkne test, po jehož splnění
+        budeš moci začít s projekty.
+    </p>
+  </div>
+{% endif %}
+{% endblock %}

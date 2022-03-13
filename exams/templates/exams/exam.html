@@ -1,9 +1,41 @@
-{% extends 'exams/base_exam.html' %}
+{% extends 'base/base_exam.html' %}
+
+
 {% block content %}
 
+<div class="center">
+</div>
 
 
+  <div class="overview_big_card">
+    <h1 class="text-muted">{{ data.exam.exam_header }}</h1>
 
-    fhdafilkdhaskf
+    <form method="post">
+      {% csrf_token %}
+<hr class="dot">
+      {% for q in data.questions %}
+
+        {% if q.type_tag == 'MULTI' %}
+            {% include 'exams/multiform.html' %}
+
+
+        {% elif q.type_tag == 'SINGLE' %}
+            {% include 'exams/singleform.html' %}
+
+        {% elif q.type_tag == 'OPEN' %}
+            {% include 'exams/openform.html' %}
+
+        {% endif %}
+
+      {% endfor %}
+    <br>
+
+
+      <input type="submit" class="btn btn-primary" value="Odeslat">
+    </form>
+  </div>
 
 {% endblock %}
+
+
+

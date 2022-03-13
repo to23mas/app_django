@@ -12,8 +12,8 @@ class Exam(models.Model):
 
 
 class Question(models.Model):
-    exam_sets = models.ForeignKey(Exam, on_delete=models.CASCADE)
-    exam_task = models.TextField(max_length=200)
+    exam = models.ForeignKey(Exam, on_delete=models.CASCADE)
+    question_text = models.TextField(max_length=200)
     tags = (
         ("MULTI", 'multi'),
         ("SINGLE", "single"),
@@ -22,20 +22,21 @@ class Question(models.Model):
     type_tag = models.CharField(max_length=10, default="SINGLE", choices=tags)
 
     def __str__(self):
-        return self.exam_task
+        return self.question_text
 
 
 class Answer(models.Model):
-    question_id = models.ForeignKey(Question, on_delete=models.CASCADE)
-    question_text = models.TextField(max_length=1000)
+    answer_id = models.ForeignKey(Question, on_delete=models.CASCADE)
+    exam_id = models.ForeignKey(Exam, on_delete=models.CASCADE, blank=True, null=True)
+    answer_text = models.TextField(max_length=1000)
     tags = (
         ("RIGHT", 'right'),
         ("WRONG", "wrong")
     )
-    question_tag = models.CharField(max_length=10, default="WRONG", choices=tags)
+    answer_tag = models.CharField(max_length=10, default="WRONG", choices=tags)
 
     def __str__(self):
-        return self.question_id.__str__() + ' - ' + self.question_text
+        return self.answer_id.__str__() + ' - ' + self.answer_text
 
 
 class UserExamProgress(models.Model):
@@ -45,3 +46,17 @@ class UserExamProgress(models.Model):
 
     def __str__(self):
         return self.user.username
+
+
+class OpenRightAnswer(models.Model):
+    question = models.OneToOneField(
+        Question,
+        on_delete=models.CASCADE,
+        primary_key=True,
+    )
+    exam_id = models.ForeignKey(Exam, on_delete=models.CASCADE, blank=True, null=True)
+
+    right_answer = models.TextField(max_length=200)
+
+    def __str__(self):
+        return str(self.question_id) + ' - ' +self.right_answer

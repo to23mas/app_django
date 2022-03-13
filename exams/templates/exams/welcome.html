@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'base/base_main.html' %}
 {% block content %}
 
     <div class="overview_big_card">
@@ -7,7 +7,7 @@
       <hr>
       <p>čas: {{ exam.exam_time }}</p>
       <hr>
-      <a href="{% url 'exams:exam'  lesson_id %}">
+      <a href="{% url 'exams:exam' lesson_id %}">
         <button class="center">Psát test<span></span></button>
       </a>
     </div>

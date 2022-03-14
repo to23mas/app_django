@@ -23,7 +23,9 @@
              <i class="fa fa-check-circle" style="padding-top: 10px;" aria-hidden="true"></i>
          </div>
          <div>
-           <h4 style="padding-top: 4px;">{{ exam }}</h4>
+             <a href="{% url 'exams:result' exam.id %}">
+                <h4 style="padding-top: 4px;">{{ exam }}</h4>
+             </a>
         <hr>
 
          </div>

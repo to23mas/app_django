@@ -16,4 +16,9 @@
 .q{
     padding: 30px;
 }
-
+.bg-green{
+    background-color: #8cfd87;
+}
+.bg-red{
+    background-color: #ce8888;
+}

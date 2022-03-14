@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
-from .models import Exam, Question, Answer, UserExamProgress,OpenRightAnswer
+from .models import Exam, Question, Answer, UserExamProgres, OpenRightAnswer, ExamResult
+from collections import Counter
 
 
 class ExamOverview:
@@ -11,8 +12,8 @@ class ExamOverview:
         self.empty = self.is_empty()
 
     def get_aviable_exams(self):
-        aviable = UserExamProgress.objects.get(user=self.user).aviable
-        complete = UserExamProgress.objects.get(user=self.user).completed
+        aviable = UserExamProgres.objects.get(user=self.user).aviable
+        complete = UserExamProgres.objects.get(user=self.user).completed
 
         result = aviable - complete
         if result == 1:
@@ -20,7 +21,7 @@ class ExamOverview:
         return None
 
     def get_completed_exams(self):
-        complete = UserExamProgress.objects.get(user=self.user).completed
+        complete = UserExamProgres.objects.get(user=self.user).completed
         complete_ids = list(range(1, complete + 1))
 
         # TODO test this
@@ -51,42 +52,92 @@ class ExamValidation:
     def __init__(self, lesson_id: int, data):
         self.lesson_id = lesson_id
         self.data = data
+        self.questions = Question.objects.filter(exam=self.lesson_id)
+        self.q_count = self.questions.count()
+        self.progress = {}
+
         self.user_answers = []
-        self.correct_answers = Answer.objects.filter(exam_id=lesson_id, answer_tag='RIGHT')
-        self.correct_open = OpenRightAnswer.objects.get(exam_id=lesson_id)
         self.user_open = ''
 
-    def single(self):
-        # data = self.data.
-        pass
+    def __single(self, question: Question):
 
-    def multi(self):
-        pass
+        # načte id správné odpovědi
+        correct = Answer.objects.get(question_id=question, answer_tag='RIGHT').id
+        flag = False
+        # iterace přes všechny uživatelovi odpovědi
+        for answers in self.user_answers:
+            if correct == answers:
+                flag = True
+                break
+        if flag:
+            self.progress[question.id] = 'RIGHT'
+        else:
+            self.progress[question.id] = 'WRONG'
 
-    def check_open(self, question):
-        pass
+    def __multi(self, question: Question):
+        if len(self.user_answers) == 0:
+            self.progress[question.id] = 'WRONG'
+            return
+        user = self.user_answers
+        # načte všechny správné opovědi
+        corrects = list(Answer.\
+                        objects.\
+                        filter(question_id=question, answer_tag='RIGHT').\
+                        values_list('id', flat=True))
+
+        wrongs = list(Answer.\
+                      objects.\
+                      filter(question_id=question, answer_tag='WRONG').\
+                      values_list('id', flat=True))
+
+        check_correct = all(
+            item in list(self.user_answers) for item in corrects)  # true if all correct answers selected
+        check_wrong = any(item in wrongs for item in list(self.user_answers))  # true if wrong selected
+
+        if not check_wrong and check_correct:
+            self.progress[question.id] = 'RIGHT'
+        else:
+            self.progress[question.id] = 'WRONG'
+
+    def __check_open(self, question: Question):
+        answer = OpenRightAnswer.objects.get(question=question).right_answer
+
+        if str(self.user_open) == answer:
+            self.progress[question.id] = 'RIGHT'
+        else:
+            self.progress[question.id] = 'WRONG'
 
     def load_data(self):
+        """funkce do listu user_answer načte ids jeho odpovědí
+            a do user_open načte otevřenou odpověď"""
         for q in self.data:
-
             if q.isnumeric():
-                self.user_answers.append(Answer.objects.get(id=q))
+                self.user_answers.append(Answer.objects.get(id=q).id)
 
             elif q == 'OPEN':
                 self.user_open = self.data.get('OPEN')
 
-
     def validate(self):
-        list_right = []
-        list_user = []
-        for a in self.correct_answers:
-            list_right.append(a.id)
+        for question in self.questions:
 
-        for a in self.user_answers:
-            list_user.append(a.id)
+            if question.type_tag == 'SINGLE':
+                self.__single(question)
+            elif question.type_tag == 'MULTI':
+                self.__multi(question)
+            elif question.type_tag == 'OPEN':
+                self.__check_open(question)
 
-        if list_right in list_user:
-            return True
+    def result(self, user_id: int):
+        calc_result = Counter(self.progress.values())
+        sum = calc_result['RIGHT'] + calc_result['WRONG']
+        percentage = calc_result['RIGHT'] / (sum / 100)
+        if not ExamResult.objects.filter(exam=self.lesson_id):
+            ExamResult(exam=Exam.objects.get(id=self.lesson_id),
+                       user_id=user_id,
+                       correct=calc_result['RIGHT'],
+                       wrong=calc_result['WRONG'],
+                       percentage=percentage).save()
+            prog = UserExamProgres.objects.get(user=user_id)
+            prog.completed = prog.completed + 1
+            prog.save()
 
-        else:
-            return False

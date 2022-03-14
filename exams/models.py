@@ -26,7 +26,7 @@ class Question(models.Model):
 
 
 class Answer(models.Model):
-    answer_id = models.ForeignKey(Question, on_delete=models.CASCADE)
+    question_id = models.ForeignKey(Question, on_delete=models.CASCADE)
     exam_id = models.ForeignKey(Exam, on_delete=models.CASCADE, blank=True, null=True)
     answer_text = models.TextField(max_length=1000)
     tags = (
@@ -36,10 +36,10 @@ class Answer(models.Model):
     answer_tag = models.CharField(max_length=10, default="WRONG", choices=tags)
 
     def __str__(self):
-        return self.answer_id.__str__() + ' - ' + self.answer_text
+        return self.question_id.__str__() + ' - ' + self.answer_text
 
 
-class UserExamProgress(models.Model):
+class UserExamProgres(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     completed = models.IntegerField(blank=True, null=True, default=0)
     aviable = models.IntegerField(blank=True, null=True, default=0)
@@ -59,4 +59,15 @@ class OpenRightAnswer(models.Model):
     right_answer = models.TextField(max_length=200)
 
     def __str__(self):
-        return str(self.question_id) + ' - ' +self.right_answer
+        return self.question.question_text + ' - ' + self.right_answer
+
+
+class ExamResult(models.Model):
+    exam = models.ForeignKey(Exam, on_delete=models.CASCADE)
+    user_id = models.IntegerField(blank=True, null=True, default=0)
+    correct = models.IntegerField(blank=True, null=True, default=0)
+    wrong = models.IntegerField(blank=True, null=True, default=0)
+    percentage = models.IntegerField(blank=True, null=True, default=0)
+
+    def __str__(self):
+        return self.exam.exam_header

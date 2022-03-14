@@ -302,3 +302,10 @@ button:hover {
 button:active span::before {
  background: #2751cd;
 }
+.bg-green{
+    background-color: #d0fcc9;
+}
+.bg-red{
+    background-color: #ce8888;
+}
+

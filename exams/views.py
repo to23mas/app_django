@@ -1,8 +1,10 @@
+from django.db.models.functions import Pi
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from .exam_data_class import ExamOverview, Test, ExamValidation
-from .models import Exam
+from .models import Exam, ExamResult
+from json import dumps
 from random import randint
 
 
@@ -10,21 +12,19 @@ from random import randint
 @login_required(login_url='/accounts/login/')
 def exam_view(request, lesson_id):
 
+    #aviability TODO pokud u6ivatel nem8 povolen vstup
+    if ExamResult.objects.filter(user_id=request.user.id,
+                                 exam=lesson_id).exists():
+        return redirect('exams:result', lesson_id)
 
-    # TODO udělat tři dict pro single, multi a pro tu poslední blbost
     if request.method == 'POST':
-        POST_data_dict = []
-        POST_data_open = {}
 
-        for item in request.POST.keys():
-            POST_data_dict.append(request.POST[item])
-            if item == 'OPEN':
-                POST_data_open['OPEN'] = request.POST[item]
-
-        validator = ExamValidation(lesson_id, P)
+        validator = ExamValidation(lesson_id, request.POST)
         validator.load_data()
-        a = validator.validate()
-        print(a)
+        validator.validate()
+        validator.result(request.user.id)
+        return redirect('exams:result', lesson_id)
+
     data = Test(request.user, lesson_id)
 
     return render(request, 'exams/exam.html', {'data': data})
@@ -40,7 +40,19 @@ def exam_all(request):
 
 @login_required(login_url='/accounts/login/')
 def exam_overview(request, lesson_id):
+
     exam = Exam.objects.get(id=lesson_id)
 
     return render(request, 'exams/welcome.html', {'exam': exam,
                                                   'lesson_id': lesson_id})
+
+
+def result_view(request, lesson_id):
+    #aviability
+    if not ExamResult.objects.filter(user_id=request.user.id,
+                                     exam=lesson_id).exists():
+        return redirect('crossroad:overview')
+
+    result = ExamResult.objects.get(exam=lesson_id)
+
+    return render(request, 'exams/result.html', {'result': result})

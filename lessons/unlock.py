@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 
-from exams.models import UserExamProgress
+from exams.models import UserExamProgres
 from .models import Chapter, Progress
 from lessons.load_data_class import LessonData
 
@@ -15,7 +15,7 @@ class Aviability_Handler:
     def unlock_default(user: User) -> None:
         user.groups.add(1)
         user.groups.add(2)
-        UserExamProgress(user=user).save()
+        UserExamProgres(user=user).save()
         Progress(user=user).save()
 
     @staticmethod
@@ -49,7 +49,7 @@ class Aviability_Handler:
 
     @classmethod
     def unlock_first_test(cls, user: User) -> None:
-        progress = UserExamProgress.objects.get(user=user)
+        progress = UserExamProgres.objects.get(user=user)
         if progress.aviable == 0:
             progress.aviable = 1
             progress.save()

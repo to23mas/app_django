@@ -1,0 +1,49 @@
+{% extends 'base/base_main.html' %}
+{% block content %}
+
+    <div class="overview_big_card
+    {% if result.percentage > 60 %}
+    bg-green
+    {% else %}
+    bg-red
+    {% endif %}">
+      <h2>{{ result }} / Výsledky</h2>
+    <div id="piechart" style="display: inline-block"></div>
+        <a href="{% url 'crossroad:overview' %}">
+            <button style="margin-left: 23px;">Zpět na seznam lekcí<span></span></button>
+        </a>
+    </div>
+
+
+
+
+
+
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+<script type="text/javascript">
+// Load google charts
+google.charts.load('current', {'packages':['corechart']});
+google.charts.setOnLoadCallback(drawChart);
+
+// Draw the chart and set the chart values
+function drawChart() {
+  var data = google.visualization.arrayToDataTable([
+
+  ['Effort', 'Amount given'],
+  ['Správně',  {{result.correct }} ],
+  ['Špatně', {{ result.wrong }}]
+
+]);
+
+  // Optional; add a title and set the width and height of the chart
+  var options = {is3D: true, pieSliceText: 'value', 'width':550, 'height':400, backgroundColor: { fill : 'transparent'}};
+
+  // Display the chart inside the <div> element with id="piechart"
+  var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+  chart.draw(data, options);
+}
+</script>
+{% endblock %}
+
+

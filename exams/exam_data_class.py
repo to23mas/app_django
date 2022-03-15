@@ -1,17 +1,21 @@
 from django.contrib.auth.models import User
-from .models import Exam, Question, Answer, UserExamProgres, OpenRightAnswer, ExamResult
+from .models import Exam, Question, Answer, ExamResult, UserExamProgres, OpenRightAnswer, ExamResult
 from collections import Counter
-
+from django.utils.timezone import now, timedelta
 
 class ExamOverview:
     def __init__(self, user: User):
         self.user = user
 
-        self.aviable = self.get_aviable_exams()
-        self.completed = self.get_completed_exams()
-        self.empty = self.is_empty()
+        self.aviable = self.__get_aviable_exams()
+        self.success = self.__get_completed_exams() # query set with Exam
+        # self.failed = self.__get_failed()
+        # self.failed_once = self.__get_failed_once()
+        # self.failed_twice = self.__get_failed_twice()
 
-    def get_aviable_exams(self):
+        self.empty = self.__is_empty()
+
+    def __get_aviable_exams(self):
         aviable = UserExamProgres.objects.get(user=self.user).aviable
         complete = UserExamProgres.objects.get(user=self.user).completed
 
@@ -20,7 +24,7 @@ class ExamOverview:
             return Exam.objects.filter(id=aviable)
         return None
 
-    def get_completed_exams(self):
+    def __get_completed_exams(self):
         complete = UserExamProgres.objects.get(user=self.user).completed
         complete_ids = list(range(1, complete + 1))
 
@@ -30,10 +34,17 @@ class ExamOverview:
 
         return None
 
-    def is_empty(self):
-        if self.aviable is None and self.completed is None:
+    def __is_empty(self):
+        if self.aviable is None and self.success is None:
             return True
         return False
+
+    # def __get_failed(self):
+    #     exam = ExamResult.objects.get(user_id=self.user.id, take=1)
+    #     pass
+    #
+    # def __get_failed_twice(self):
+    #     pass
 
 
 class Test:
@@ -49,7 +60,8 @@ class Test:
 
 
 class ExamValidation:
-    def __init__(self, lesson_id: int, data):
+    def __init__(self, lesson_id: int, data, retake=False):
+        self.retake = retake
         self.lesson_id = lesson_id
         self.data = data
         self.questions = Question.objects.filter(exam=self.lesson_id)
@@ -111,9 +123,13 @@ class ExamValidation:
         """funkce do listu user_answer načte ids jeho odpovědí
             a do user_open načte otevřenou odpověď"""
         for q in self.data:
+            print(q)
             if q.isnumeric():
-                self.user_answers.append(Answer.objects.get(id=q).id)
 
+                try:
+                    self.user_answers.append(Answer.objects.get(question_id=q, answer_text=self.data[q]).id)
+                except:
+                    self.user_answers.append(Answer.objects.get(id=q).id)
             elif q == 'OPEN':
                 self.user_open = self.data.get('OPEN')
 
@@ -131,13 +147,32 @@ class ExamValidation:
         calc_result = Counter(self.progress.values())
         sum = calc_result['RIGHT'] + calc_result['WRONG']
         percentage = calc_result['RIGHT'] / (sum / 100)
-        if not ExamResult.objects.filter(exam=self.lesson_id):
-            ExamResult(exam=Exam.objects.get(id=self.lesson_id),
-                       user_id=user_id,
-                       correct=calc_result['RIGHT'],
-                       wrong=calc_result['WRONG'],
-                       percentage=percentage).save()
-            prog = UserExamProgres.objects.get(user=user_id)
-            prog.completed = prog.completed + 1
-            prog.save()
+        if not self.retake:
+            if not ExamResult.objects.filter(exam=self.lesson_id):
+                ExamResult(exam=Exam.objects.get(id=self.lesson_id),
+                           user_id=user_id,
+                           correct=calc_result['RIGHT'],
+                           wrong=calc_result['WRONG'],
+                           percentage=percentage).save()
+                prog = UserExamProgres.objects.get(user=user_id)
+                prog.completed = 1
+                prog.save()
+            else:
+                exam_result = ExamResult.objects.get(exam=self.lesson_id)
+                exam_result.take = 2
+                exam_result.lock = now() + timedelta(minutes=15)
+                exam_result.correct = calc_result['RIGHT']
+                exam_result.wrong = calc_result['WRONG']
+                exam_result.percentage = percentage
+                exam_result.save()
+        else:
+            if percentage < 60:
+
+                exam_result = ExamResult.objects.get(exam=self.lesson_id)
+                exam_result.correct = calc_result['RIGHT']
+                exam_result.wrong = calc_result['WRONG']
+                exam_result.percentage = percentage
+                exam_result.lock = now() + timedelta(minutes=15)
+
+                exam_result.save()
 

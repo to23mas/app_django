@@ -1,4 +1,5 @@
 {% extends 'base/base_main.html' %}
+{% load extras_exam %}
 {% block content %}
 
 
@@ -16,20 +17,18 @@
       </div>
 
     {% endfor %}
-    {% for exam in exams.completed %}
-       <div class="two_divs_to_center">
-        <hr>
-         <div class="completed" style="height:35px; width:35px; float: left">
-             <i class="fa fa-check-circle" style="padding-top: 10px;" aria-hidden="true"></i>
-         </div>
-         <div>
-             <a href="{% url 'exams:result' exam.id %}">
-                <h4 style="padding-top: 4px;">{{ exam }}</h4>
-             </a>
-        <hr>
-
-         </div>
-       </div>
+    {% for exam in exams.success %}
+        {% if exam|is_failed == 0 %}
+            {% include 'exams/sucess_exam.html'%}
+        {% elif exam|is_failed == 1 %}
+            {% include 'exams/retake_exam.html'%}
+        {% else %}
+            {% if exam|is_timed %}
+                {% include 'exams/retake_exam.html'%}
+            {% else %}
+                {% include 'exams/failed_exam.html'%}
+            {% endif %}
+        {% endif %}
         {% empty %}
         {% endfor %}
     </div>

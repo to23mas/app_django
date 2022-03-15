@@ -308,4 +308,28 @@ button:active span::before {
 .bg-red{
     background-color: #ce8888;
 }
+.semicompeted{
+    width: 80px;
+    height: 80px;
+    margin: 0 auto;
+    text-align: center;
+    vertical-align: center;
+    border-radius: 50%;
+    background-color: rgba(255, 250, 98, 0.68);
+    box-shadow: rgba(60, 64, 67, 0.3) 0 1px 2px 0,
+                rgba(60, 64, 67, 0.15) 0 2px 6px 2px;
+}
+.failed{
+
+    width: 80px;
+    height: 80px;
+    margin: 0 auto;
+    text-align: center;
+    vertical-align: center;
+    border-radius: 50%;
+    background-color: rgba(255, 152, 152, 0.61);
+    box-shadow: rgba(60, 64, 67, 0.3) 0 1px 2px 0,
+                rgba(60, 64, 67, 0.15) 0 2px 6px 2px;
+
+}
 

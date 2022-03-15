@@ -1,0 +1,15 @@
+{% load extras_exam %}
+<div class="two_divs_to_center">
+   <hr>
+   <div class="failed" style="height:35px; width:35px; float: left">
+       <i class="fa fa-times" style="padding-top: 10px;" aria-hidden="true"></i>
+   </div>
+   <div>
+       <a href="{% url 'exams:result' exam.id %}">
+          <h4 style="padding-top: 4px;">{{ exam }}</h4>
+       </a>
+         test se znovu otevře v {{ exam|get_time }}
+   <hr>
+
+   </div>
+</div>

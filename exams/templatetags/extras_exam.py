@@ -36,14 +36,17 @@ def get_time_failed(exam_: Exam):
 
 @register.filter(name='is_timed')
 def is_timed(exam_: Exam):
-    # print(type(ExamResult.objects.get(exam=exam_).lock))
-    # print(ExamResult.objects.get(exam=exam_).lock)
-    # print(datetime.now().time())
-    # print(type(datetime.now().time()))
+    # print(type(ExamResult.objects.get(exam=exam_).lock_date))
+    # print(ExamResult.objects.get(exam=exam_).lock_date)
+    # print(datetime.today().date())
+    # print(type(datetime.today().date()))
+    # print(ExamResult.objects.get(exam=exam_).lock_date >= datetime.today())
     ex = ExamResult.objects.get(exam=exam_)
-    if ex.lock >= datetime.now().time():
-        return False
-    ex.take=1
+    if ex.lock_date >= datetime.today().date():
+        if ex.lock >= datetime.now().time():
+            return False
+
+    ex.take = 1
     ex.save()
     return True
 

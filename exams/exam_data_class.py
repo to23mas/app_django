@@ -1,7 +1,8 @@
 from django.contrib.auth.models import User
 from .models import Exam, Question, Answer, ExamResult, UserExamProgres, OpenRightAnswer, ExamResult
 from collections import Counter
-from django.utils.timezone import now, timedelta
+from django.utils.timezone import now, timedelta, datetime
+
 
 class ExamOverview:
     def __init__(self, user: User):
@@ -161,6 +162,7 @@ class ExamValidation:
                 exam_result = ExamResult.objects.get(exam=self.lesson_id)
                 exam_result.take = 2
                 exam_result.lock = now() + timedelta(minutes=15)
+                exam_result.lock_date = datetime.today()
                 exam_result.correct = calc_result['RIGHT']
                 exam_result.wrong = calc_result['WRONG']
                 exam_result.percentage = percentage
@@ -173,6 +175,7 @@ class ExamValidation:
                 exam_result.wrong = calc_result['WRONG']
                 exam_result.percentage = percentage
                 exam_result.lock = now() + timedelta(minutes=15)
+                exam_result.lock_date = datetime.today()
 
                 exam_result.save()
 

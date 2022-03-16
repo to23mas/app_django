@@ -70,6 +70,7 @@ class ExamResult(models.Model):
     percentage = models.IntegerField(blank=True, null=True, default=0)
     take = models.IntegerField(blank=True, null=True, default=1)
     lock = models.TimeField(blank=True, null=True)
+    lock_date = models.DateField(blank=True, null=True)
 
     def __str__(self):
         return self.exam.exam_header

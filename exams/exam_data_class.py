@@ -1,67 +1,82 @@
 from django.contrib.auth.models import User
-from .models import Exam, Question, Answer, ExamResult, UserExamProgres, OpenRightAnswer, ExamResult
+from .models import Exam, Question, Answer, UserExamProgres, OpenRightAnswer, ExamResult
 from collections import Counter
 from django.utils.timezone import now, timedelta, datetime
 
 
 class ExamOverview:
     def __init__(self, user: User):
+        """
+        Třída es stará o vípisy testů které má uživatel  dispozici a které má již hotové
+        @param user: uživatel získaný requestem
+        """
         self.user = user
 
-        self.aviable = self.__get_aviable_exams()
-        self.success = self.__get_completed_exams() # query set with Exam
-        # self.failed = self.__get_failed()
-        # self.failed_once = self.__get_failed_once()
-        # self.failed_twice = self.__get_failed_twice()
 
-        self.empty = self.__is_empty()
+        # TODO test null values -> new user should look into test folder
+        self.aviable = self.__get_aviable_exams()  # tsty které se dají psát
+        self.success = self.__get_completed_exams()  # query set with Exam... úspěšné testy
+        self.empty = self.__is_empty() # pokud nemá nic
 
-    def __get_aviable_exams(self):
-        aviable = UserExamProgres.objects.get(user=self.user).aviable
-        complete = UserExamProgres.objects.get(user=self.user).completed
 
-        result = aviable - complete
+    def __get_aviable_exams(self) -> object:
+        """
+        hledá dostupné testy
+        @return: None or Exam model if found
+        """
+        aviable = UserExamProgres.objects.get(user=self.user).aviable  #dostupné
+        complete = UserExamProgres.objects.get(user=self.user).completed #navštívené
+
+        result = aviable - complete  # udává jestli nalezený test je splněn nebo ne
         if result == 1:
             return Exam.objects.filter(id=aviable)
         return None
 
-    def __get_completed_exams(self):
+    def __get_completed_exams(self) -> object:
+        """
+        hledá a vrací splněné testy
+        @return: None or Exam modle query set
+        """
         complete = UserExamProgres.objects.get(user=self.user).completed
         complete_ids = list(range(1, complete + 1))
 
         # TODO test this
         if complete >= 1:
             return Exam.objects.filter(pk__in=complete_ids)
-
         return None
 
-    def __is_empty(self):
+    def __is_empty(self) -> bool:
+        """
+
+        @return: True => pokud uživatel nemá dostupné a splněné žádné testy
+        """
         if self.aviable is None and self.success is None:
             return True
         return False
 
-    # def __get_failed(self):
-    #     exam = ExamResult.objects.get(user_id=self.user.id, take=1)
-    #     pass
-    #
-    # def __get_failed_twice(self):
-    #     pass
-
 
 class Test:
-
     def __init__(self, user: User, exam_id: id):
+        """
+        načte test pro odeslání do template
+
+        @param user: uživatel z requestu,
+        @param exam_id: číslo testu
+        """
         self.exam_id = exam_id
         self.user = user
         self.exam = Exam.objects.get(id=self.exam_id)
         self.questions = Question.objects.filter(exam=self.exam)
 
-    def get_questions(self):
-        return
-
 
 class ExamValidation:
     def __init__(self, lesson_id: int, data, retake=False):
+        """
+        Validace výsledků testu
+        @param lesson_id: číslo testu
+        @param data: request.POST
+        @param retake: jestli se jedná o opakokvaný test
+        """
         self.retake = retake
         self.lesson_id = lesson_id
         self.data = data

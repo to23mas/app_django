@@ -1,11 +1,9 @@
-from django.db.models.functions import Pi
-from django.http import JsonResponse
+
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from .exam_data_class import ExamOverview, Test, ExamValidation
 from .models import Exam, ExamResult
-from json import dumps
-from random import randint
+
 
 
 @login_required(login_url='/accounts/login/')
@@ -17,7 +15,6 @@ def exam_view(request, lesson_id):
     if result.exists():
         takes = ExamResult.objects.get(user_id=request.user.id, exam=lesson_id).take
         if takes > 1:
-
             return redirect('exams:result', lesson_id)
 
     if request.method == 'POST':
@@ -27,9 +24,9 @@ def exam_view(request, lesson_id):
         validator.result(request.user.id)
         return redirect('exams:result', lesson_id)
 
-    data = Test(request.user, lesson_id)
+    test = Test(request.user, lesson_id)
 
-    return render(request, 'exams/exam.html', {'data': data})
+    return render(request, 'exams/exam.html', {'data': test})
 
 
 @login_required(login_url='/accounts/login/')
@@ -59,15 +56,3 @@ def result_view(request, lesson_id):
     result = ExamResult.objects.get(exam=lesson_id)
 
     return render(request, 'exams/result.html', {'result': result})
-
-def retake_view(request, lesson_id):
-    if request.method == 'POST':
-        validator = ExamValidation(lesson_id, request.POST, retake=True)
-        validator.load_data()
-        validator.validate()
-        validator.result(request.user.id)
-        return redirect('exams:result', lesson_id)
-
-    data = Test(request.user, lesson_id)
-
-    return render(request, 'exams/exam.html', {'data': data})

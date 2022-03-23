@@ -1,8 +1,21 @@
 {% extends 'base/base_main.html' %}
 {% block content %}
+{% load static %}
     <div  class="overview_big_card">
 
     <h1 class="text-muted">Welcome placeholder</h1>
+
+    <br>
+    <br>
+    <br>
+
+    <div class="cmd">
+           <h4>$<h4> python -m pip install Django
     </div>
+    </div>
+    <a href="https://www.jetbrains.com/pycharm/">
+        <img src="{% static 'PyCharm_icon.png' %}" alt="pycharm logo" width="150" height="150">
+    </a>
+
 
 {% endblock %}

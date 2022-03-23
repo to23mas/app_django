@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from lessons.models import Lesson, Chapter, Requirements, Goals, Content
 from .allowed import is_user_allowed
-from .unlock import Aviability_Handler
+from .unlock_progress import Aviability_Handler
 from .load_data_class import LessonData
 
 
@@ -36,16 +36,23 @@ def lessonOne_view(request, chapter_link):
     # odkliknutí tlačítka přečteno
     if request.method == 'POST':
         if 'text' in request.POST:
-            if Aviability_Handler.unlock_by_text(request.POST['text'], data.user):
+            if Aviability_Handler.unlock_by_text(request.POST['text'],
+                                                 data.user,
+                                                 data.chapter.chapter_order,
+                                                 data.lesson.id):
                 data.set_chapter(data.get_next_chapter())
             test_form_text = 'Tak takhle se asi nejmenuješ'
+
         elif 'exam' in request.POST:
             Aviability_Handler.unlock_first_test(user=data.user)
             return redirect('exams:exam', lesson_id=data.lesson.id)
-        else:
-            next_lesson = Aviability_Handler.unlock_chapter_by_reading(data.user, data)
-            if Aviability_Handler.lesson_is_completed(data.user.progress.lesson01, data.lesson.le_capitols):
-                return redirect('crossroad:overview')
+
+        elif 'read':
+
+            next_lesson = Aviability_Handler.unlock_next_chapter(data.user,
+                                                                 data.chapter.chapter_order,
+                                                                 data.lesson.lesson_order)
+
 
             return redirect('lessons:switch',
                             lesson_id=data.lesson.id,
@@ -69,6 +76,32 @@ def lessonOne_view(request, chapter_link):
 
 def lessonTwo_view(request, chapter_link):
     data = LessonData(2, chapter_link, request.user)
+
+    test_form_text = ''
+
+    # odkliknutí tlačítka přečteno
+    if request.method == 'POST':
+        if 'text' in request.POST:
+            if Aviability_Handler.unlock_by_text(request.POST['text'],
+                                                 data.user,
+                                                 data.chapter.chapter_order,
+                                                 data.lesson.id):
+                data.set_chapter(data.get_next_chapter())
+            test_form_text = 'Tak takhle se asi nejmenuješ'
+
+        elif 'exam' in request.POST:
+            Aviability_Handler.unlock_first_test(user=data.user)
+            return redirect('exams:exam', lesson_id=data.lesson.id)
+
+        elif 'read':
+            next_lesson = Aviability_Handler.unlock_next_chapter(data.user,
+                                                                 data.chapter.chapter_order,
+                                                                 data.lesson.lesson_order)
+
+            return redirect('lessons:switch',
+                            lesson_id=data.lesson.id,
+                            chapter_link=next_lesson)
+
 
     return render(request, 'lessons/setup.html', {'lesson': data.lesson,
                                                   'chapters': data.chapters,

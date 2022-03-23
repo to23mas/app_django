@@ -4,7 +4,7 @@ from django.contrib.auth.forms import AuthenticationForm, PasswordResetForm
 from django.contrib.auth import login, logout
 from .forms import CustomUserForm
 from .validation import Validate
-from lessons.unlock import Aviability_Handler
+from lessons.unlock_progress import Aviability_Handler
 
 
 def login_view(request):

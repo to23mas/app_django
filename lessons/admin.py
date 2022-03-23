@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.forms import TextInput, Textarea
 from django.db import models
 
-from .models import Lesson, Requirements, Goals, Chapter, Content, Progress
+from .models import Lesson, Requirements, Goals, Chapter, Content
 
 
 class ContentAdmin(admin.ModelAdmin):
@@ -17,5 +17,3 @@ admin.site.register(Requirements)
 admin.site.register(Goals)
 admin.site.register(Chapter)
 admin.site.register(Content, ContentAdmin)
-admin.site.register(Progress)
-# Register your models here.

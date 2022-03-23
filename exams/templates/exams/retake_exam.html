@@ -4,10 +4,11 @@
        <i class="fa fa-times" style="padding-top: 10px;" aria-hidden="true"></i>
    </div>
    <div>
-       <a href="{% url 'exams:exam' exam.id %}">
-          <h4 style="padding-top: 4px;">{{ exam }} - nový pokus </h4>
+       <a href="{% url 'exams:welcome' exam.failed_exam.id %}">
+          <h4 style="padding-top: 4px;">{{ exam.failed_exam.exam_header }} - nový pokus </h4>
        </a>
 {#       <a href="{% url 'exams:result' exam.id %}"> výsledek </a>#}
+
    <hr>
 
    </div>

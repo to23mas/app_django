@@ -332,4 +332,25 @@ button:active span::before {
                 rgba(60, 64, 67, 0.15) 0 2px 6px 2px;
 
 }
+.cmd{
+    width: 33%;
+    background-color: black;
+    color: chartreuse;
+    padding: 15px 15px 15px 15px;
+    margin: 15px auto;
+
+}
+.commands{
+    width: 50%;
+    background-color: rgb(0, 0, 0);
+    color: rgba(127, 255, 0, 0.81);
+    padding: 15px 15px 15px 15px;
+    margin: 15px auto;
+
+}
+.inline{
+    display: inline-block;
+}
+
+
 

@@ -1,7 +1,8 @@
-from django.contrib.auth.models import User
-from .models import Exam, Question, Answer, UserExamProgres, OpenRightAnswer, ExamResult
+from django.contrib.auth.models import User, Group
+from .models import Exam, Question, Answer, OpenRightAnswer, FailedTest, ExamResult, AviableTest, CompleteTest
 from collections import Counter
 from django.utils.timezone import now, timedelta, datetime
+from lessons.models import Lesson
 
 
 class ExamOverview:
@@ -12,24 +13,32 @@ class ExamOverview:
         """
         self.user = user
 
-
         # TODO test null values -> new user should look into test folder
         self.aviable = self.__get_aviable_exams()  # tsty které se dají psát
         self.success = self.__get_completed_exams()  # query set with Exam... úspěšné testy
-        self.empty = self.__is_empty() # pokud nemá nic
+        self.failed = self.__get_failed_exams() # ne[spesne testy
+        self.empty = self.__is_empty()  # pokud nemá nic
 
+
+    def __get_failed_exams(self):
+        failed = FailedTest.objects.filter(user=self.user)
+
+        if failed.exists():
+            return failed
+        return None
 
     def __get_aviable_exams(self) -> object:
         """
         hledá dostupné testy
         @return: None or Exam model if found
         """
-        aviable = UserExamProgres.objects.get(user=self.user).aviable  #dostupné
-        complete = UserExamProgres.objects.get(user=self.user).completed #navštívené
 
-        result = aviable - complete  # udává jestli nalezený test je splněn nebo ne
-        if result == 1:
-            return Exam.objects.filter(id=aviable)
+        aviable = AviableTest.objects.filter(user=self.user)
+         # navštívené
+
+        if aviable.exists():
+
+            return aviable
         return None
 
     def __get_completed_exams(self) -> object:
@@ -37,12 +46,10 @@ class ExamOverview:
         hledá a vrací splněné testy
         @return: None or Exam modle query set
         """
-        complete = UserExamProgres.objects.get(user=self.user).completed
-        complete_ids = list(range(1, complete + 1))
+        complete = CompleteTest.objects.filter(user=self.user)
 
-        # TODO test this
-        if complete >= 1:
-            return Exam.objects.filter(pk__in=complete_ids)
+        if complete.exists():
+            return complete
         return None
 
     def __is_empty(self) -> bool:
@@ -50,7 +57,7 @@ class ExamOverview:
 
         @return: True => pokud uživatel nemá dostupné a splněné žádné testy
         """
-        if self.aviable is None and self.success is None:
+        if self.aviable is None and self.success is None and self.failed is None:
             return True
         return False
 
@@ -70,14 +77,14 @@ class Test:
 
 
 class ExamValidation:
-    def __init__(self, lesson_id: int, data, retake=False):
+    def __init__(self, lesson_id: int, data):
         """
         Validace výsledků testu
         @param lesson_id: číslo testu
         @param data: request.POST
         @param retake: jestli se jedná o opakokvaný test
         """
-        self.retake = retake
+
         self.lesson_id = lesson_id
         self.data = data
         self.questions = Question.objects.filter(exam=self.lesson_id)
@@ -108,14 +115,14 @@ class ExamValidation:
             return
         user = self.user_answers
         # načte všechny správné opovědi
-        corrects = list(Answer.\
-                        objects.\
-                        filter(question_id=question, answer_tag='RIGHT').\
+        corrects = list(Answer. \
+                        objects. \
+                        filter(question_id=question, answer_tag='RIGHT'). \
                         values_list('id', flat=True))
 
-        wrongs = list(Answer.\
-                      objects.\
-                      filter(question_id=question, answer_tag='WRONG').\
+        wrongs = list(Answer. \
+                      objects. \
+                      filter(question_id=question, answer_tag='WRONG'). \
                       values_list('id', flat=True))
 
         check_correct = all(
@@ -134,6 +141,64 @@ class ExamValidation:
             self.progress[question.id] = 'RIGHT'
         else:
             self.progress[question.id] = 'WRONG'
+
+    def __success(self, user_id: int, percentage: int, right, wrong):
+        exam_result = ExamResult.objects.get(exam=self.lesson_id, user_id=user_id)
+
+        exam_result.correct = right
+        exam_result.wrong = wrong
+        exam_result.percentage = percentage
+        exam_result.save()
+
+        #odemknut9 lekce přes group
+        lesson_group = Lesson.objects.filter(id=self.lesson_id + 1).get().lesson_group
+        group = Group.objects.get(name=lesson_group)
+        user = User.objects.get(id=user_id)
+        user.groups.add(group)
+        user.save()
+
+        #splnění testu
+        les = Lesson.objects.get(id=self.lesson_id).lesson_order
+        exam = Exam.objects.get(exam_number=les)
+        complete = CompleteTest.objects.create(user=user, complete_exam=exam)
+        complete.save()
+
+        # odstranění dostupneho
+
+        aviable = AviableTest.objects.filter(user=user, aviable_exam=exam)
+        if aviable.exists():
+            aviable.delete()
+
+        failed = FailedTest.objects.filter(user=user, failed_exam=exam)
+        if failed.exists():
+            failed.delete()
+
+
+
+    def __fail(self, user_id: int, percentage: int, right, wrong, take=2):
+
+        exam_result = ExamResult.objects.get(exam=self.lesson_id, user_id=user_id)
+        exam_result.take = take
+        exam_result.lock = now() + timedelta(minutes=15)
+        exam_result.lock_date = datetime.today()
+        exam_result.correct = right
+        exam_result.wrong = wrong
+        exam_result.percentage = percentage
+        exam_result.save()
+
+        user = User.objects.get(id=user_id)
+        if take == 2:
+            exam = Exam.objects.get(id=self.lesson_id)
+            aviable = AviableTest.objects.get(user=user, aviable_exam=exam)
+            aviable.delete()
+            failed = FailedTest.objects.create(user=user, failed_exam=exam, take=take)
+            failed.save()
+        elif take == 3:
+            exam = Exam.objects.get(id=self.lesson_id)
+            failed = FailedTest.objects.get(user=user, failed_exam=exam)
+            failed.take = 3
+            failed.save()
+
 
     def load_data(self):
         """funkce do listu user_answer načte ids jeho odpovědí
@@ -163,34 +228,15 @@ class ExamValidation:
         calc_result = Counter(self.progress.values())
         sum = calc_result['RIGHT'] + calc_result['WRONG']
         percentage = calc_result['RIGHT'] / (sum / 100)
-        if not self.retake:
-            if not ExamResult.objects.filter(exam=self.lesson_id):
-                ExamResult(exam=Exam.objects.get(id=self.lesson_id),
-                           user_id=user_id,
-                           correct=calc_result['RIGHT'],
-                           wrong=calc_result['WRONG'],
-                           percentage=percentage).save()
-                prog = UserExamProgres.objects.get(user=user_id)
-                prog.completed = 1
-                prog.save()
+        if not ExamResult.objects.filter(exam=self.lesson_id, user_id=user_id).exists():
+            ExamResult.objects.create(exam_id=self.lesson_id, user_id=user_id).save()
+
+            if percentage < 60:
+                self.__fail(user_id, percentage , calc_result['RIGHT'], calc_result['WRONG'])
             else:
-                exam_result = ExamResult.objects.get(exam=self.lesson_id)
-                exam_result.take = 2
-                exam_result.lock = now() + timedelta(minutes=15)
-                exam_result.lock_date = datetime.today()
-                exam_result.correct = calc_result['RIGHT']
-                exam_result.wrong = calc_result['WRONG']
-                exam_result.percentage = percentage
-                exam_result.save()
+                self.__success(user_id, percentage, calc_result['RIGHT'], calc_result['WRONG'])
         else:
             if percentage < 60:
-
-                exam_result = ExamResult.objects.get(exam=self.lesson_id)
-                exam_result.correct = calc_result['RIGHT']
-                exam_result.wrong = calc_result['WRONG']
-                exam_result.percentage = percentage
-                exam_result.lock = now() + timedelta(minutes=15)
-                exam_result.lock_date = datetime.today()
-
-                exam_result.save()
-
+                self.__fail(user_id, percentage, calc_result['RIGHT'], calc_result['WRONG'], take=3)
+            else:
+                self.__success(user_id, percentage, calc_result['RIGHT'], calc_result['WRONG'])

@@ -1,7 +1,8 @@
+{% load static %}
 {% for item in chapter.content_set.all %}
 <div class="lesson_chapter" style="margin-left: 50px;">
   <hr class="content">
-    <h3 style="margin-left: 60px;">{{ item.content_header }}</h3>
+    <h3>{{ item.content_header }}</h3>
 
 
 {# lekce 01 kapitola 2  -lekce a projekty (zde jsou potřeba dlaždice) #}
@@ -18,8 +19,10 @@
     {% if forloop.last and not is_complete and chapter.chapter_tag == 'TEXT' %}
         <form method="POST">
         {% csrf_token %}
-          <label for="text">Tvuje odpověď: </label>
-            <input id="text" type="text" name="text">
+          <label for="text">Tvoje odpověď: </label>
+            <br>
+            <input class="cmd" id="text" type="text" name="text">
+            <br>
             <button value="text">Odeslat<span></span></button>
         {{ form_fail }}
 

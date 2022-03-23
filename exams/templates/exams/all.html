@@ -5,25 +5,25 @@
 
 {% if not exams.empty %}
      <div class="overview_big_card">
+
     {% for exam in exams.aviable %}
       <div class="two_divs_to_center">
         <div>
             <hr>
-            <a href="{% url 'exams:welcome' exam.id %}">
-              <h4>{{ exam }}</h4>
+            <a href="{% url 'exams:welcome' exam.aviable_exam.id %}">
+              <h4>{{ exam.aviable_exam.exam_header }}</h4>
             </a>
             <hr>
         </div>
       </div>
 
     {% endfor %}
-    {% for exam in exams.success %}
-        {% if exam|is_failed == 0 %}
-            {% include 'exams/sucess_exam.html'%}
-        {% elif exam|is_failed == 1 %}
+    {% for exam in exams.failed %}
+        {% if exam.take == 2 %}
             {% include 'exams/retake_exam.html'%}
         {% else %}
-            {% if exam|is_timed %}
+            {% if exam|is_timed:user %}
+
                 {% include 'exams/retake_exam.html'%}
             {% else %}
                 {% include 'exams/failed_exam.html'%}
@@ -31,6 +31,10 @@
         {% endif %}
         {% empty %}
         {% endfor %}
+
+     {% for exam in exams.success %}
+            {% include 'exams/sucess_exam.html'%}
+     {% endfor %}
     </div>
 {% else %}
 

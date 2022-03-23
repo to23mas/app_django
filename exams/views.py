@@ -2,8 +2,20 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from .exam_data_class import ExamOverview, Test, ExamValidation
-from .models import Exam, ExamResult
+from .models import Exam, ExamResult, AviableTest, FailedTest
+from lessons.models import Lesson
 
+
+def can_user_be_here(user, lesson_id):
+    exam = Exam.objects.get(exam_number=lesson_id)
+    aviable = AviableTest.objects.filter(user=user, aviable_exam=exam)
+    if aviable.exists():
+        return False
+    failed = FailedTest.objects.filter(user=user, failed_exam=exam)
+    if failed.exists():
+        if failed.get().take < 3:
+            return False
+    return True
 
 
 @login_required(login_url='/accounts/login/')
@@ -11,11 +23,10 @@ def exam_view(request, lesson_id):
     """stránka se samotným testem"""
 
     # aviability TODO pokud u6ivatel nem8 povolen vstup
-    result = ExamResult.objects.filter(user_id=request.user.id, exam=lesson_id)
-    if result.exists():
-        takes = ExamResult.objects.get(user_id=request.user.id, exam=lesson_id).take
-        if takes > 1:
-            return redirect('exams:result', lesson_id)
+    if can_user_be_here(request.user, lesson_id):
+        return redirect('exams:result', lesson_id)
+
+
 
     if request.method == 'POST':
         validator = ExamValidation(lesson_id, request.POST)
@@ -32,7 +43,7 @@ def exam_view(request, lesson_id):
 @login_required(login_url='/accounts/login/')
 def exam_all(request):
     """přehled dostupných a splněných testů"""
-    timed_out = Exam
+
     exams = ExamOverview(request.user)
     return render(request, 'exams/all.html', {'exams': exams})
 
@@ -53,6 +64,6 @@ def result_view(request, lesson_id):
                                      exam=lesson_id).exists():
         return redirect('crossroad:overview')
 
-    result = ExamResult.objects.get(exam=lesson_id)
+    result = ExamResult.objects.get(exam=lesson_id, user_id=request.user.id)
 
     return render(request, 'exams/result.html', {'result': result})

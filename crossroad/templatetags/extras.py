@@ -12,23 +12,24 @@ def has_group(user: User, group_name: str) -> bool:
 
 @register.filter(name='is_competed')
 def is_completed(user: User, lesson: Lesson) -> bool:
-    les = lesson.lesson_group
-    progress = ''
-    if les == 'UVOD':
-        progress = user.progress.lesson01
-    elif les == 'HELLO':
-        progress = user.progress.lesson02
-    elif les == '':
-        pass
-    elif les == '':
-        pass
-    elif les == '':
-        pass
-    elif les == '':
-        pass
-    else:
-        pass
-
-    if progress == lesson.le_capitols:
-        return True
-    return False
+    pass
+    # les = lesson.lesson_group
+    # progress = ''
+    # if les == 'UVOD':
+    #     progress = user.progress.lesson01
+    # elif les == 'HELLO':
+    #     progress = user.progress.lesson02
+    # elif les == '':
+    #     pass
+    # elif les == '':
+    #     pass
+    # elif les == '':
+    #     pass
+    # elif les == '':
+    #     pass
+    # else:
+    #     pass
+    #
+    # if progress == lesson.le_capitols:
+    #     return True
+    # return False

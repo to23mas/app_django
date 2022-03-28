@@ -1,6 +1,7 @@
 from django import template
 from django.contrib.auth.models import User
 from lessons.models import Lesson
+from exams.models import CompleteTest
 
 register = template.Library()
 
@@ -12,24 +13,7 @@ def has_group(user: User, group_name: str) -> bool:
 
 @register.filter(name='is_competed')
 def is_completed(user: User, lesson: Lesson) -> bool:
-    pass
-    # les = lesson.lesson_group
-    # progress = ''
-    # if les == 'UVOD':
-    #     progress = user.progress.lesson01
-    # elif les == 'HELLO':
-    #     progress = user.progress.lesson02
-    # elif les == '':
-    #     pass
-    # elif les == '':
-    #     pass
-    # elif les == '':
-    #     pass
-    # elif les == '':
-    #     pass
-    # else:
-    #     pass
-    #
-    # if progress == lesson.le_capitols:
-    #     return True
-    # return False
+    complete = CompleteTest.objects.filter(user_id=user.id, complete_exam_id=lesson.id)
+
+    return True if complete.exists() else False
+

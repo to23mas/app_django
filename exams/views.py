@@ -2,7 +2,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from .exam_data_class import ExamOverview, Test, ExamValidation
-from .models import Exam, ExamResult, AviableTest, FailedTest
+from .models import Exam, ExamResult, AviableTest, FailedTest, CompleteTest
 from lessons.models import Lesson
 
 
@@ -15,6 +15,10 @@ def can_user_be_here(user, lesson_id):
     if failed.exists():
         if failed.get().take < 3:
             return False
+
+    complete = CompleteTest.objects.filter(user=user, failed_exam=exam)
+    if complete.exists():
+        return False
     return True
 
 

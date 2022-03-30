@@ -351,6 +351,35 @@ button:active span::before {
 .inline{
     display: inline-block;
 }
-
+.code_div {
+    background-color: #575757;
+    color: white;
+    text-align: left;
+    padding: 25px;
+    margin: 0 auto;
+    border-radius: 15px;
+    box-shadow: rgba(42, 42, 80, 0.88) 0px 50px 100px -20px, rgba(0, 0, 0, 0.8) 0px 30px 60px -30px, rgba(10, 37, 64, 0.83) 0px -2px 6px 0px inset;
+}
+.code_tab{
+    padding-left: 50px;
+}
+.code_y{
+    color: #ffe326;
+}
+.code_gr{
+    color: chartreuse;
+}
+.code_r{
+    color: #f31c1c;
+}
+.code_o{
+    color: #f19b2b;
+}
+.code_go{
+    color: #fff42a;
+}
+.code_b{
+    color: #4674ff;
+}
 
 

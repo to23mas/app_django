@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 
-from exams.models import AviableTest, CompleteTest, Exam
+from exams.models import AviableTest, CompleteTest, FailedTest, Exam
 from .models import Chapter, Lesson
 from lessons.load_data_class import LessonData
 
@@ -64,14 +64,28 @@ class Aviability_Handler:
     def unlock_first_test(cls, user: User) -> None:
 
         exam = Exam.objects.get(exam_header='ÚVODNÍ TEST')
-
+        # if not cls.test_exists(user, 1):
+        #     return
         if AviableTest.objects.filter(user=user, aviable_exam=exam).exists():
             return
         aviable = AviableTest.objects.create(user=user, aviable_exam=exam)
 
         aviable.save()
 
+    @classmethod
+    def test_exists(cls, user: User, lesson_id: int):
+        exam = Exam.objects.get(exam_number=lesson_id)
+        aviable = AviableTest.objects.filter(user=user, aviable_exam=exam)
+        if aviable.exists():
+            return False
+        failed = FailedTest.objects.filter(user=user, failed_exam=exam)
+        if failed.exists():
+            if failed.get().take < 3:
+                return False
 
-
+        complete = CompleteTest.objects.filter(user=user, failed_exam=exam)
+        if complete.exists():
+            return False
+        return True
 
 

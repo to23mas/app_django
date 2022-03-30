@@ -9,13 +9,21 @@
     <br>
     <br>
 
-    <div class="cmd">
-           <h4>$<h4> python -m pip install Django
+    <div class="code_div" style="width: 50%">
+    <span class="code_y">@login_required</span>
+    <span>(</span>
+    <span class="code_r">login_url=</span>
+    <span class="code_gr">'/accounts/login/'</span>
+    <span>)</span><br>
+    <span class="code_o">def</span>
+    <span class="code_go">courses_overview_view</span>
+    <span>(request):</span><br>
+        <div class="code_tab">
+            &nbsp; list_courses = Lesson.objects.all()<br>
+            &nbsp; <span class="code_b">print</span>()
+        </div>
     </div>
-    </div>
-    <a href="https://www.jetbrains.com/pycharm/">
-        <img src="{% static 'PyCharm_icon.png' %}" alt="pycharm logo" width="150" height="150">
-    </a>
+
 
 
 {% endblock %}

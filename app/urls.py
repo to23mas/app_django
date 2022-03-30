@@ -28,6 +28,8 @@ urlpatterns = [
     path('lessons/', include('lessons.urls')),
     # exams app
     path('exams/', include('exams.urls')),
+    # projects
+    path('projects/', include('projects.urls')),
     # admin app
     path('admin/', admin.site.urls),
 ]

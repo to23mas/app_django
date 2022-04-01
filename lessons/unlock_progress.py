@@ -64,10 +64,10 @@ class Aviability_Handler:
     def unlock_first_test(cls, user: User) -> None:
 
         exam = Exam.objects.get(exam_header='ÚVODNÍ TEST')
-        # if not cls.test_exists(user, 1):
-        #     return
-        if AviableTest.objects.filter(user=user, aviable_exam=exam).exists():
+        if cls.test_exists(user, 1):
             return
+        # if AviableTest.objects.filter(user=user, aviable_exam=exam).exists():
+        #     return
         aviable = AviableTest.objects.create(user=user, aviable_exam=exam)
 
         aviable.save()
@@ -77,15 +77,14 @@ class Aviability_Handler:
         exam = Exam.objects.get(exam_number=lesson_id)
         aviable = AviableTest.objects.filter(user=user, aviable_exam=exam)
         if aviable.exists():
-            return False
+            return True
         failed = FailedTest.objects.filter(user=user, failed_exam=exam)
         if failed.exists():
-            if failed.get().take < 3:
-                return False
+            return True
 
-        complete = CompleteTest.objects.filter(user=user, failed_exam=exam)
+        complete = CompleteTest.objects.filter(user=user, complete_exam=exam)
         if complete.exists():
-            return False
-        return True
+            return True
+        return False
 
 

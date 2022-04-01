@@ -45,7 +45,7 @@ def lessonOne_view(request, chapter_link):
 
         elif 'exam' in request.POST:
             Aviability_Handler.unlock_first_test(user=data.user)
-            return redirect('exams:exam', lesson_id=data.lesson.id)
+            return redirect('exams:welcome', lesson_id=data.lesson.id)
 
         elif 'read':
 

@@ -16,7 +16,7 @@ def can_user_be_here(user, lesson_id):
         if failed.get().take < 3:
             return False
 
-    complete = CompleteTest.objects.filter(user=user, failed_exam=exam)
+    complete = CompleteTest.objects.filter(user=user, complete_exam=exam)
     if complete.exists():
         return False
     return True
@@ -27,7 +27,7 @@ def exam_view(request, lesson_id):
     """stránka se samotným testem"""
 
     # aviability TODO pokud u6ivatel nem8 povolen vstup
-    if can_user_be_here(request.user, lesson_id):
+    if not can_user_be_here(request.user, lesson_id):
         return redirect('exams:result', lesson_id)
 
 
@@ -56,7 +56,8 @@ def exam_all(request):
 def exam_overview(request, lesson_id):
     """úvodní stránka než začne test"""
     exam = Exam.objects.get(id=lesson_id)
-
+    if not can_user_be_here(request.user, lesson_id):
+        return redirect('exams:all')
     return render(request, 'exams/welcome.html', {'exam': exam,
                                                   'lesson_id': lesson_id})
 

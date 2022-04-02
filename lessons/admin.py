@@ -7,7 +7,7 @@ from .models import Lesson, Requirements, Goals, Chapter, Content
 
 class ContentAdmin(admin.ModelAdmin):
     formfield_overrides = {
-        models.CharField: {'widget': TextInput(attrs={'size': '100'})},
+        models.CharField: {'widget': TextInput(attrs={'size': '200'})},
         models.TextField: {'widget': Textarea(attrs={'rows': 40, 'cols': 200})},
     }
 

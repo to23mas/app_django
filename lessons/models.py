@@ -71,7 +71,7 @@ class Content(models.Model):
     content_chapter = models.ForeignKey(Chapter, on_delete=models.CASCADE)
     content_order = models.IntegerField(blank=True, null=True)
     content_header = models.CharField(max_length=50, default='')
-    content_text = models.CharField(max_length=500, default='')
+    content_text = models.TextField(max_length=1000, default='')
     content_html = models.TextField(max_length=10000, default='', blank=True, null=True)
 
     ordering = ['content_order']

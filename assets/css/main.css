@@ -346,6 +346,8 @@ button:active span::before {
     color: rgba(127, 255, 0, 0.81);
     padding: 15px 15px 15px 15px;
     margin: 15px auto;
+    border: solid black 1px;
+    border-radius: 15px;
 
 }
 .inline{

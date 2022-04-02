@@ -14,18 +14,24 @@ def switch_view(request, lesson_id, chapter_link):
 
     elif lesson_id == 2:
         return redirect('lessons:lessonTwo', chapter_link=chapter_link)
-    # elif lesson_id == 3:
-    #     return redirect('lessons:lessonTwo', chapter_link=chapter_link)
-    # elif lesson_id == 4:
-    #     return redirect('lessons:lessonTwo', chapter_link=chapter_link)
-    # elif lesson_id == 5:
-    #     return redirect('lessons:lessonTwo', chapter_link=chapter_link)
-    # elif lesson_id == 6:
-    #     return redirect('lessons:lessonTwo', chapter_link=chapter_link)
-    # elif lesson_id == 7:
-    #     return redirect('lessons:lessonTwo', chapter_link=chapter_link)
+    elif 3 <= lesson_id <= 6:
+        return redirect('lessons:project', chapter_link=chapter_link, lesson_id=lesson_id)
     else:
         return redirect('lessons:notLesson', not_='no')
+
+
+def project_view(request, lesson_id, chapter_link):
+    data = LessonData(lesson_id, chapter_link, request.user)
+
+    return render(request, 'lessons/project.html', {'lesson': data.lesson,
+                                                 'chapters': data.chapters,
+                                                 'chapter_link': chapter_link,
+                                                 'requirements': data.requirements,
+                                                 'goals': data.goals,
+                                                 'chapter': data.chapter,
+                                                 'is_complete': data.chapter_is_complete,
+                                                 })
+
 
 
 def lessonOne_view(request, chapter_link):
@@ -53,11 +59,9 @@ def lessonOne_view(request, chapter_link):
                                                                  data.chapter.chapter_order,
                                                                  data.lesson.lesson_order)
 
-
             return redirect('lessons:switch',
                             lesson_id=data.lesson.id,
                             chapter_link=next_lesson)
-
 
     # TODO ještě vyhodit uživatele z kapitoly ne jenom z lekce
     if not is_user_allowed(data.user, data.lesson.id, data.chapter):
@@ -101,7 +105,6 @@ def lessonTwo_view(request, chapter_link):
             return redirect('lessons:switch',
                             lesson_id=data.lesson.id,
                             chapter_link=next_lesson)
-
 
     return render(request, 'lessons/setup.html', {'lesson': data.lesson,
                                                   'chapters': data.chapters,

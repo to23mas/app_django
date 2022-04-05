@@ -2,7 +2,7 @@ from django.contrib.auth.models import User, Group
 from .models import Exam, Question, Answer, OpenRightAnswer, FailedTest, ExamResult, AviableTest, CompleteTest
 from collections import Counter
 from django.utils.timezone import now, timedelta, datetime
-from lessons.models import Lesson
+from lessons.models import Lesson, Chapter
 
 
 class ExamOverview:
@@ -151,11 +151,16 @@ class ExamValidation:
         exam_result.save()
 
         #odemknut9 lekce přes group
-        lesson_group = Lesson.objects.filter(id=self.lesson_id + 1).get().lesson_group
+        next_lesson = Lesson.objects.get(id=self.lesson_id + 1)
+        lesson_group = next_lesson.lesson_group
         group = Group.objects.get(name=lesson_group)
         user = User.objects.get(id=user_id)
         user.groups.add(group)
         user.save()
+
+        # odemknutí první kapitoly
+        chapter = Chapter.objects.get(chapter_lesson=next_lesson, chapter_order=1)
+        chapter.allowed.add(user)
 
         #splnění testu
         les = Lesson.objects.get(id=self.lesson_id).lesson_order

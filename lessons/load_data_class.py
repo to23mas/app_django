@@ -29,17 +29,10 @@ class LessonData:
     def get_goals(self) -> list:
         return Goals.objects.filter(goal_lesson_id=self.lesson.id)
 
-    def get_one_chapter(self) -> Chapter:
-        pass
-        # return Chapter.objects.get(chapter_lesson_id=self.lesson.id, chapter_link=self.chapter_link)
-
     def is_complete(self) -> bool:
-        user_progress = 0
-
         if Lesson.objects.filter(id=self.lesson.id, complete=self.user).exists():
             return True
         return False
-        # return is_chapter_completed(self.user, self.lesson.id, self.chapter.chapter_order)
 
     def set_chapter(self, chapter: Chapter) -> None:
         self.chapter = chapter

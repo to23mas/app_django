@@ -10,7 +10,7 @@ def can_user_be_here(user, lesson_id):
     exam = Exam.objects.get(exam_number=lesson_id)
     aviable = AviableTest.objects.filter(user=user, aviable_exam=exam)
     if aviable.exists():
-        return False
+        return True
     failed = FailedTest.objects.filter(user=user, failed_exam=exam)
     if failed.exists():
         if failed.get().take < 3:

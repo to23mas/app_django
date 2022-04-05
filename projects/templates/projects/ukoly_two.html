@@ -1,0 +1,25 @@
+<br><br><br>
+
+<div class="box2">
+    <div class="half-left">
+    {% for ukol in ukoly %}
+        {% if ukol.typ == 'DŮLEŽITÉ' %}
+        <div class="high"><strong>{{ ukol.text }}</strong>
+            <a href="{% url 'projects:delete' ukol.id %}" class="right">
+                <i class="fa fa-times" aria-hidden="true"></i>
+            </a>
+        </div>
+        {% endif %}
+    {% endfor %}
+    </div><div class="half-right">
+    {% for ukol in ukoly %}
+        {% if ukol.typ != 'DŮLEŽITÉ' %}
+        <div class="medium"><strong>{{ ukol.text }}</strong>
+            <a href="{% url 'projects:delete' ukol.id %}" class="right">
+                <i class="fa fa-times" aria-hidden="true"></i>
+            </a>
+        </div>
+        {% endif %}
+    {% endfor %}
+    </div>
+</div>

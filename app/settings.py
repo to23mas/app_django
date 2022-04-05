@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'lessons.apps.LessonsConfig',
     # exams
     'exams.apps.ExamsConfig',
+    # projects
+    'projects.apps.ProjectsConfig',
 
     'django.contrib.admin',
     'django.contrib.auth',

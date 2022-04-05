@@ -1,0 +1,31 @@
+{% extends 'base/base_projects.html' %}
+{% block content %}
+    {% if projects.exists %}
+    <div class="overview_big_card">
+        {% for project in projects %}
+
+        <div class="two_divs_to_center">
+             <hr>
+
+            <div class="center">
+                <a href="{{ project.lesson.le_view }}">
+
+                   <h4 style="padding-top: 4px;">{{ project.lesson.lesson_name }}</h4>
+                </a>
+            <hr>
+
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+
+        <div  class="overview_big_card bg_redish">
+        <h1 class="text-muted">V tuto chvíli nemáš žádný dostupný projekt</h1>
+        <p>
+            V horní liště klikni "COURSES" a pak na dostupnou lekci. Po konci lekce se ti odemkne test, po jehož splnění
+            budeš moci začít s projekty.
+        </p>
+      </div>
+    {% endif %}
+{% endblock %}

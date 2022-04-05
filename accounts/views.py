@@ -4,7 +4,7 @@ from django.contrib.auth.forms import AuthenticationForm, PasswordResetForm
 from django.contrib.auth import login, logout
 from .forms import CustomUserForm
 from .validation import Validate
-from lessons.unlock_progress import Aviability_Handler
+from lessons.unlock_progress import ProgressHandler
 
 
 def login_view(request):
@@ -42,10 +42,13 @@ def register_view(request):
 
     if request.method == 'POST':
         form = CustomUserForm(request.POST)
+
+
         if form.is_valid():
             user = form.save()
             login(request, user)  # přihlášení uživatele
-            Aviability_Handler.unlock_default(user) #odemik8 u6ivateli prvni dve lekce
+            progress_handler = ProgressHandler(user=user, lesson_id=1)
+            progress_handler.unlock_default() #odemik8 u6ivateli prvni dve lekce
             return redirect('crossroad:welcome')
     else:
         form = CustomUserForm()

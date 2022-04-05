@@ -72,7 +72,10 @@ class ExamResult(models.Model):
     lock_date = models.DateField(blank=True, null=True)
 
     def __str__(self):
-        return f"{self.user_id} {self.exam.exam_header}"
+        return f"{self.get_username()}({self.user_id}) {self.exam.exam_header}"
+
+    def get_username(self):
+        return User.objects.get(id=self.user_id)
 
 
 class AviableTest(models.Model):

@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-import uuid
+
 
 
 class Lesson(models.Model):
@@ -71,7 +71,7 @@ class Content(models.Model):
     content_chapter = models.ForeignKey(Chapter, on_delete=models.CASCADE)
     content_order = models.IntegerField(blank=True, null=True)
     content_header = models.CharField(max_length=50, default='')
-    content_text = models.TextField(max_length=1000, default='')
+    content_text = models.TextField(max_length=1000, default='', blank=True, null=True)
     content_html = models.TextField(max_length=10000, default='', blank=True, null=True)
 
     ordering = ['content_order']
@@ -80,4 +80,10 @@ class Content(models.Model):
         return str(self.content_chapter) + ' - ' + str(self.content_order) + ' - ' + self.content_header
 
 
+class TextTest(models.Model):
+    lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE)
+    text = models.TextField(max_length=100, default='', blank=True, null=True)
+    hint = models.TextField(max_length=100, default='', blank=True, null=True)
 
+    def __str__(self):
+        return str(self.lesson.lesson_name) + ' - ' + self.text

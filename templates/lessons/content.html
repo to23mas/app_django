@@ -1,41 +1,59 @@
 {% load static %}
-{% for item in chapter.content_set.all %}
+{% load extras_lessons %}
+
+{% for item in chapter|get_by_order %}
 <div class="lesson_chapter" style="margin-left: 50px;">
   <hr class="content">
+<div class="content_header">
     <h3>{{ item.content_header }}</h3>
+</div>
 
 
 {# lekce 01 kapitola 2  -lekce a projekty (zde jsou potřeba dlaždice) #}
+
+
        <p> {{ item.content_html|safe }} </p>
+
 {#{% include 'helper.html' %}#}
-       <p> {{ item.content_text }} </p>
+    {% if not item.content_text == '' %}
+    <div class="content_text">
+       <p> {{ item.content_text|safe  }} </p>
+    </div>
+    {% endif %}
     {% if forloop.last and not is_complete and chapter.chapter_tag == 'READING' %}
-      <form method="POST">
+      <div class="content_question">
+        <form method="POST">
         {% csrf_token %}
          <button value="read">Další kapitola<span></span></button>
       </form>
+      </div>
     {% endif %}
 
     {% if forloop.last and not is_complete and chapter.chapter_tag == 'TEXT' %}
+        <div class="content_question">
         <form method="POST">
         {% csrf_token %}
           <label for="text">Tvoje odpověď: </label>
+
             <br>
+            {% if not hint  == '' %}
+            <strong>Nápověda: </strong>{{ hint }}<br>
+            {% endif %}
             <input class="cmd" id="text" type="text" name="text">
             <br>
             <button value="text">Odeslat<span></span></button>
-        {{ form_fail }}
 
       </form>
-
+      </div>
     {% endif %}
 
     {% if forloop.last and not is_complete and chapter.chapter_tag == 'EXAM' %}
+        <div class="content_question">
         <form method="POST">
         {% csrf_token %}
             <button value="exam" type="submit" name="exam">Jít na test<span></span></button>
       </form>
-
+    </div>
     {% endif %}
 
 <hr class="content">

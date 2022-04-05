@@ -11,9 +11,14 @@
                    href="{% url 'crossroad:welcome' %}">home</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link {% if request.path == "/exams/all" %} active {% endif %}"
+                <a class="nav-link {% if request.path == "/exams/all/" %} active {% endif %}"
                    href="{% url 'exams:all' %}">testy</a>
             </li>
+
+            <li class="nav-item">
+                        <a class="nav-link {% if request.path == "/projects/all/" %} active {% endif %}"
+                           href="{% url 'projects:all' %}">projekty</a>
+                    </li>
         </ul>
 
 

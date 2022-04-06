@@ -1,0 +1,26 @@
+{% extends 'base/base_accounts_projects.html' %}
+{% block content %}
+<a href="{% url 'projects:register_one' %}">Registrovat</a>
+<br>
+<br>
+
+    <div>
+    <h1>Přihlásit</h1><br>
+    <h2>{% if not fail == '' %}{{ fail }}{% endif %}</h2>
+    <form method="POST" enctype="multipart/form-data">
+
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="přihlásit">
+<br><br>
+
+    <div style="border: black solid 2px;">
+    <h2>tví uživatelé s hesly</h2>
+    {% for user in users %}
+        {{ user.jmeno }} - {{ user.heslo }}<br>
+    {% endfor %}
+    </div>
+
+    </form>
+    </div>
+{% endblock %}

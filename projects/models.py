@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from lessons.models import Lesson
 from django.conf import settings
 
+
 class Ukol(models.Model):
     typy = (
         ("DŮLEŽITÉ", 'Důležité'),
@@ -27,10 +28,6 @@ class Soubor(models.Model):
     def __str__(self):
         return f"{self.lesson.lesson_name} - {self.name}"
 
-    @property
-    def relative_path(self):
-        return os.path.relpath(self.path, settings.MEDIA_ROOT)
-
 
 class Project(models.Model):
     lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE)
@@ -38,3 +35,21 @@ class Project(models.Model):
 
     def __str__(self):
         return f"{self.lesson.lesson_name} - {self.user.username}"
+
+
+class UserAccount(models.Model):
+    jmeno = models.CharField(max_length=50)
+    email = models.EmailField(max_length=254)
+    heslo = models.CharField(max_length=50)
+    heslo_znovu = models.CharField(max_length=50)
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"new - {self.jmeno} / you - {self.user.username}"
+#
+# class Acount(models.Model):
+#     pass
+#
+# class Account(models.Model):
+#     pass

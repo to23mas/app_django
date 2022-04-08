@@ -1,21 +1,21 @@
 <br><br><br>
 
-<div class="box2">
-    <div class="half-left">
+<div class="box-todo">
+    <div class="half-left-todo">
     {% for ukol in ukoly %}
         {% if ukol.typ == 'DŮLEŽITÉ' %}
-        <div class="high"><strong>{{ ukol.text }}</strong>
-            <a href="{% url 'projects:delete' ukol.id %}" class="right">
+        <div class="high-todo"><strong>{{ ukol.text }}</strong>
+            <a href="{% url 'projects:delete' ukol.id %}" class="right-todo">
                 <i class="fa fa-times" aria-hidden="true"></i>
             </a>
         </div>
         {% endif %}
     {% endfor %}
-    </div><div class="half-right">
+    </div><div class="half-right-todo">
     {% for ukol in ukoly %}
         {% if ukol.typ != 'DŮLEŽITÉ' %}
-        <div class="medium"><strong>{{ ukol.text }}</strong>
-            <a href="{% url 'projects:delete' ukol.id %}" class="right">
+        <div class="medium-todo"><strong>{{ ukol.text }}</strong>
+            <a href="{% url 'projects:delete' ukol.id %}" class="right-todo">
                 <i class="fa fa-times" aria-hidden="true"></i>
             </a>
         </div>

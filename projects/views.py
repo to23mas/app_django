@@ -1,4 +1,23 @@
-from django.http import HttpResponse
+"""
+Views
+
+Všechny views pro projekty
+
+Projekty jsou - Helloworld, Úkolníček, Account
+
+
+@author: Tomáš Míčka
+
+@contact: to23mas@gmail.com
+
+@version:  1.0
+
+
+
+TODO změnit projekty až bude hotovo
+"""
+
+
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from .forms import UkolForm, RegisterForm, LoginForm
@@ -6,10 +25,27 @@ from .models import Ukol, Project, UserAccount
 
 
 def hello_view(request):
-    return HttpResponse('Hello, world.')
+    """ View pro první projekt, kde je poze vypsán text
+
+    @param request: request klienta
+    @return: vrací html stránku s textem "hello, World."
+    """
+    return render(request, 'projects/hello_world.html')
 
 
 def todo_view(request):
+    """ View pro druhý projekt "úkolníček"
+
+    Je zde formulář pro přidávání jednotlivých úkolů a
+    zároveň jsou pod formulářem jednotlivé úkoly vypsány
+
+    @param request: request klienta
+
+    @var    form: Formulář pro Ukoly
+            ukoly: jednotlivé úkoly, které si už uživatel přidal
+
+    @return: vrací html stránku s formulářem a úkoly
+    """
     form = UkolForm(request.POST or None, request.FILES or None)
 
     if form.is_valid():
@@ -22,6 +58,19 @@ def todo_view(request):
 
 
 def todo_two_view(request):
+    """ View pro rozšířenou verzi úkolníčku.
+
+    Lépe stilizovaný úkolníček pomocí css.
+    Přidaná možnost mazání úkolů.
+
+    @param request: request klienta
+
+    @var    form: Formulář pro Ukoly
+            ukoly: jednotlivé úkoly, které si už uživatel přidal
+
+    @return:    1. v případě "POST' následuje redirekt sama na sebe
+                2. jinak render html stránky s formulářem a úkoly
+    """
     form = UkolForm(request.POST or None, request.FILES or None)
 
     if form.is_valid():
@@ -36,20 +85,48 @@ def todo_two_view(request):
 
 
 def delete_todo(request, todo_id: int):
+    """View pro mazání jednotlivých úkolů.
+
+    Po smazání je potřeba redirect aby nešo dotaz odeslat reloadem stránky.
+
+    @param request: request klienta
+    @param todo_id: id pro úkol, který má být smazán
+    @return: redirect na view pro projekt úkolníčku
+    """
     Ukol.objects.get(id=todo_id).delete()
     return redirect('projects:todo_two')
 
 
 def all_view(request):
+    """View zobrazí uživateli všechny dostupné projekty
+
+    @param  request: request klienta
+    @var    projects: projekty které má uživatel odemknuté
+    @return: render html stránky s dostupnými projekty
+    """
     projects = Project.objects.filter(user=request.user)
     return render(request, 'projects/all.html', {'projects': projects})
 
 
 def cross_view(request):
+    """View pro projekt "accounts"
+    @return:    vrací html stránku s odkazem na registraci a na přihlášení
+    """
     return render(request, 'projects/cross.html')
 
 
 def accounts_login_one(request):
+    """View pro projekt "Accounts". s možností přihlášení účtů, které si uživatel vytvořil.
+
+    @param  request: request kienta
+    @var:   form: formulář pro přihlášení
+            fail: výpis v případě nepovedeného přihlášení
+            users: účty které si uživatel registroval
+
+    @return:    1. POST - redirect sama na sebe aby nebylo možné požadevek odesla znovu
+                2. renderuje html stránku s formulářem pro přihlášení a se seznamem účtů, které si uživatel vytvořil.
+    """
+
     form = LoginForm(request.POST or None, request.FILES or None)
     fail = ''
     if request.method == 'POST':
@@ -65,6 +142,18 @@ def accounts_login_one(request):
 
 
 def accounts_register_view(request):
+    """View pro project "Accounts". Zde si uživatel zkouší registraci účtů.
+
+    uživatel má možnost registrovat pouze tři účty.
+
+    @param request: request klienta
+
+    @var:   form: Formulář pro registraci
+    @var:   message: pole s chybami
+    @var:   accounts: uživatelovy již vytvořené účty
+
+    @return: render html stránky s formulářem registrace a výpisem jednotlivých registrací
+    """
     form = RegisterForm(request.POST or None, request.FILES or None)
     message = []
     if request.method == 'POST':
@@ -83,6 +172,21 @@ def accounts_register_view(request):
 
 
 def register_form_check(form: RegisterForm, user: User) -> list:
+    """ Funkce hledá chyby v registračním formuláři
+
+    Kontroluje se jestli existuje účet se stejným jménem,
+    počet vytvořených účtů (max 3),
+    jestli uživatel vyplnil pole pro heslo
+    a jestli se hesla shodují.
+
+    @param form: registrační formulář
+    @param user: uživatel, který formulář vyplnil
+
+    @var    users: účty, které uživatel vytvořil
+    @var    message: list pro chyby
+    @var    acc: jeden účet pro kontrolu uživatelského jména
+    @return: list: s chybami nebo prázdný list
+    """
     users = UserAccount.objects.filter(user=user)
     message = []
     if users.exists():
@@ -97,7 +201,20 @@ def register_form_check(form: RegisterForm, user: User) -> list:
         message.append('Hesla se neshodují')
     return message
 
+
 def login_form_check(form: LoginForm, user: User) -> bool:
+    """Funkce pro přihlášení se do účtu.
+
+    Funkce se podívá do databáze, jestli existuje účet, který uživatel založil, kontroluje se
+    název účtu a heslo.
+
+    @param form: přihlašovací formulář
+    @param user: uživatel, který formulář vyplnil
+
+    @var accout: účet vytvořený uživatelem
+    @return:    1. True pokud přihlášení proběhlo
+                2. False pokud ne
+    """
     account = UserAccount.objects.filter(jmeno=form.instance.jmeno,
                                          heslo=form.instance.heslo,
                                          user=user)
@@ -106,5 +223,12 @@ def login_form_check(form: LoginForm, user: User) -> bool:
         return False
     return True
 
+
 def done_view(request):
+    """View Pro projekt "Accounts"
+
+    Pokud se uživateli podaří se přihlásit do účtu který sám vytvořil, bude
+    sem přesměrován a je mu zobrazena správa o úspěšném přihlášení.
+
+    @return render html stránky s textem že přihlášení proběhlo v pořádku"""
     return render(request, 'projects/done.html')

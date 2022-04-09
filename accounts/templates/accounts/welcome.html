@@ -4,8 +4,22 @@
 <div class="bg"></div>
 <div class="bg bg2"></div>
 <div class="bg bg3"></div>
+
+{% if not project == 1 %}
+    <div class="welcome_card bg_redish">
+
+    <h2>Byl jsi odhlášen, zde si můžeš vyzkoušet kompletní funkcionalitu projektu, který budeme vytvářet.</h2><br />
+    </div>
+
+    {% else %}
+
+    <br/><br/><br/><br/><br/>
+
+{% endif %}
 <div class="welcome_card">
   <h1>Welcome placeholder</h1>
+
+<br />
     <a href="{% url 'accounts:register' %}">Register</a>
     <a href="{% url 'accounts:login' %}">Login</a>
 </div>

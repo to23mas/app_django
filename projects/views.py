@@ -17,7 +17,6 @@ Projekty jsou - Helloworld, Úkolníček, Account
 TODO změnit projekty až bude hotovo
 """
 
-
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from .forms import UkolForm, RegisterForm, LoginForm
@@ -215,8 +214,8 @@ def login_form_check(form: LoginForm, user: User) -> bool:
     @return:    1. True pokud přihlášení proběhlo
                 2. False pokud ne
     """
-    account = UserAccount.objects.filter(jmeno=form.instance.jmeno,
-                                         heslo=form.instance.heslo,
+    account = UserAccount.objects.filter(jmeno=form.data.get('jmeno'),
+                                         heslo=form.data.get('heslo'),
                                          user=user)
 
     if account.exists():

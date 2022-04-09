@@ -33,11 +33,15 @@
   border-radius: 15px;
   box-shadow:0 0 25px rgba(0, 0, 0, 0.9);
   box-sizing:border-box;
-  left:50%;
+  margin: 0 auto;
   padding:100px;
-  position:fixed;
-  top:40%;
-  transform:translate(-50%, -50%);
+    width:33%;
+     margin-top: 2%;
+
+
+}
+.bg_redish{
+    background-color: #ffcaca;
 }
 .back_button {
     background: white;

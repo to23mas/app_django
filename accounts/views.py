@@ -26,12 +26,13 @@ def login_view(request):
     return render(request, 'accounts/login.html', {'form': form})
 
 
-def welcome_view(request):
+def welcome_view(request, project=1):
     """welcome page with twi links to signup  and register"""
+
     if request.user.is_authenticated:
         return redirect('crossroad:welcome')
     else:
-        return render(request, 'accounts/welcome.html')
+        return render(request, 'accounts/welcome.html', {'project': project})
 
 
 def register_view(request):
@@ -56,12 +57,15 @@ def register_view(request):
     return render(request, 'accounts/register.html', {'form': form})
 
 
-def logout_view(request):
-    if request.user.is_anonymous:
-        return redirect('accounts:welcome')
-    logout(request)
-    return redirect('accounts:welcome')
+def logout_view(request, project=1):
 
+    if request.user.is_anonymous:
+        return redirect('accounts:welcome', 1)
+    logout(request)
+    if project == 1:
+        return redirect('accounts:welcome', 1)
+    else:
+        return redirect('accounts:welcome', 2)
 
 def forgotten_password_view(request):
     if request.user.is_authenticated:

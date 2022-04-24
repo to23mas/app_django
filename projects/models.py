@@ -47,9 +47,15 @@ class UserAccount(models.Model):
 
     def __str__(self):
         return f"new - {self.jmeno} / you - {self.user.username}"
-#
-# class Acount(models.Model):
-#     pass
-#
-# class Account(models.Model):
-#     pass
+
+
+
+
+
+
+
+
+
+
+
+

@@ -2,7 +2,6 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
-
 class Lesson(models.Model):
     lesson_name = models.CharField(max_length=200)
     lesson_order = models.IntegerField(blank=True, null=True)
@@ -18,7 +17,6 @@ class Lesson(models.Model):
         ("LESSON", 'lekce'),
         ("PROJECT", 'project')
     )
-
 
     le_tag = models.CharField(max_length=10, choices=tags, default="LESSON")
 
@@ -48,7 +46,6 @@ class Chapter(models.Model):
 
     def __str__(self):
         return f"lesson: {self.chapter_lesson.id} -- kapitola: {self.chapter_name} -- pořadí: {self.chapter_order}"
-        # return self.chapter_lesson.lesson_name + ' - ' + self.chapter_name + ' - ' + str(self.chapter_order)
 
 
 class Requirements(models.Model):
@@ -71,8 +68,9 @@ class Content(models.Model):
     content_chapter = models.ForeignKey(Chapter, on_delete=models.CASCADE)
     content_order = models.IntegerField(blank=True, null=True)
     content_header = models.CharField(max_length=50, default='')
-    content_text = models.TextField(max_length=1000, default='', blank=True, null=True)
+    content_text = models.TextField(max_length=2000, default='', blank=True, null=True)
     content_html = models.TextField(max_length=10000, default='', blank=True, null=True)
+    content_dir = models.TextField(max_length=1000, default='', blank=True, null=True)
 
     ordering = ['content_order']
 

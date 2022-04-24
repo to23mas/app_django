@@ -23,7 +23,7 @@ urlpatterns = [
     # crossroad app
     path('crossroad/', include('crossroad.urls')),
     # account app
-    path('accounts/', include('accounts.urls')),
+    path('', include('accounts.urls')),
     # lessons app
     path('lessons/', include('lessons.urls')),
     # exams app

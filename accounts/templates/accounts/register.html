@@ -4,14 +4,34 @@
 <div class="bg bg2"></div>
 <div class="bg bg3"></div>
     <div class="welcome_card">
-        <h1>Register</h1><br>
+        <h1>Registrace</h1><br>
 
         <form class="registration_form" action="{% url 'accounts:register' %}" method="post">
             {% csrf_token %} {# security token #}
-            {{ form }}
-            <input type="submit" value="registrovat">
+
+            <b>Nickname:</b><br>
+            {{ form.username }}
+            <span class="helptext">Jméno mezi jedním a 150 znaky.</span>
+            <b>Email:</b><br>
+            {{ form.email }}
+            <b>Heslo:</b><br>
+            <span class="helptext">Heslo je příliš npodobné ostatním osobním informacím.
+Heslo musí obsahovat alespoň 8 znaků.
+Heslo nesmí mít běžnou podobu ...(123456).
+Heslo musí obsahovat alespoň jedno písmeno.</span>
+            {{ form.password1 }}
+            <b>Heslo znovu:</b><br>
+            {{ form.password2 }}
+
+            <span class="helptext">Vlož stejné heslo jako předtím.</span>
+            <br>
+            <br>
+            {{ form.errors }}
+            <input type="submit" value="Registrovat" style="padding: 5px;">
         </form>
-    <a class="back_button" href="{% url 'accounts:welcome' 1%}">BACK</a>
+    <a class="back_button" href="{% url 'accounts:welcome' %}">Zpět</a>
+
 
     </div>
 {% endblock %}
+

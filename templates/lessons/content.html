@@ -5,16 +5,19 @@
 <div class="lesson_chapter" style="margin-left: 50px;">
   <hr class="content">
 <div class="content_header">
-    <h3>{{ item.content_header }}</h3>
+    <h3>{{ item.content_header | capfirst}}</h3>
+
+
 </div>
-
-
+ {% if item.content_dir %}
+            <div class="content_dir">{{ item.content_dir|safe }}</div>
+        {% endif %}
 {# lekce 01 kapitola 2  -lekce a projekty (zde jsou potřeba dlaždice) #}
 
 
        <p> {{ item.content_html|safe }} </p>
 
-{#{% include 'helper.html' %}#}
+
     {% if not item.content_text == '' %}
     <div class="content_text">
        <p> {{ item.content_text|safe  }} </p>
@@ -33,7 +36,7 @@
         <div class="content_question">
         <form method="POST">
         {% csrf_token %}
-          <label for="text">Tvoje odpověď: </label>
+          <label for="text">Vlož odpověď: </label>
 
             <br>
             {% if not hint  == '' %}

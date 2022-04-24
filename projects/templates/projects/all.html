@@ -3,6 +3,7 @@
     {% if projects.exists %}
     <div class="overview_big_card">
         {% for project in projects %}
+            {% if project.lesson.id != 8 %}
 
         <div class="two_divs_to_center">
              <hr>
@@ -16,6 +17,7 @@
 
             </div>
         </div>
+            {% endif %}
         {% endfor %}
     </div>
     {% else %}

@@ -14,7 +14,7 @@ def switch_view(request, lesson_id, chapter_link):
 
     elif lesson_id == 2:
         return redirect('lessons:lessonTwo', chapter_link=chapter_link)
-    elif 3 <= lesson_id <= 6:
+    elif 3 <= lesson_id <= 7:
         return redirect('lessons:project', chapter_link=chapter_link, lesson_id=lesson_id)
     else:
         return redirect('lessons:notLesson', not_='no')

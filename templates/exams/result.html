@@ -7,7 +7,7 @@
     {% else %}
     bg-red
     {% endif %}">
-      <h2>{{ result }} / Výsledky</h2>
+      <h2>{{ result.exam.exam_header }} / Výsledky</h2>
     <div id="piechart" style="display: inline-block"></div>
         <a href="{% url 'exams:all' %}">
             <button style="margin-left: 23px;">Zpět na seznam testů<span></span></button>

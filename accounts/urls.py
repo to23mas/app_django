@@ -5,10 +5,12 @@ from . import views
 app_name = 'accounts'
 
 urlpatterns = [
-    path('<int:project>/', views.welcome_view, name='welcome'),
+    path('pr/', views.welcome_project_view, name='welcomeProject'),
+    path('', views.welcome_view, name='welcome'),
     path('register/', views.register_view, name='register'),
     path('login/', views.login_view, name='login'),
-    path('logout<int:project>/', views.logout_view, name='logout'),
+    path('logout/', views.logout_view, name='logout'),
+    path('logoutTwo/', views.logout_two_view, name='logoutTwo'),
     path('resetPass/', views.forgotten_password_view, name='reset'),
     path('emailSend/', views.password_send_view, name='success'),
 

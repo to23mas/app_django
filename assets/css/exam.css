@@ -22,3 +22,69 @@
 .bg-red{
     background-color: #ce8888;
 }
+.content_header{
+    width: 50%;
+     margin: 15px auto;
+}
+.content_question{
+    width: 50%;
+    margin: 15px auto;
+}
+.inline{
+    display: inline-block;
+}
+.code_div{
+    background-color: #575757;
+    width: 80%;
+    color: white;
+    text-align: left;
+    padding: 25px 75px;
+    margin: 0 auto;
+    border-radius: 15px;
+
+}
+.content_dir{
+    background-color: #212121;
+    width: 12%;
+    color: white;
+    text-align: left;
+    float: left;
+    margin-left: 10%;
+    padding: 4px;
+
+    border-radius: 15px;
+}
+.code_tab{
+    padding-left: 15px;
+}
+.code_tab{
+    padding-left: 50px;
+}
+.code_y{
+    color: #ffe326;
+}
+.code_gr{
+    color: chartreuse;
+}
+.code_r{
+    color: #c0031f;
+}
+.code_o{
+    color: #f19b2b;
+}
+.code_go{
+    color: #fff42a;
+}
+.code_b{
+    color: #4674ff;
+}
+.code_grt{
+    color: #4d8b02;
+}
+.code_got{
+    color: #a58d06;
+}
+.code_grey{
+    color: #adabab;
+}
+

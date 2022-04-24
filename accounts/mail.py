@@ -11,7 +11,7 @@ class Mailer:
 
 
 
-    def send_reset_password(self):
+    def send_mail(self):
         """this function send email and return true if it is succecsfull"""
         mail = send_mail(self.subject,
                          self.message,

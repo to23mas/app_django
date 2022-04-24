@@ -14,7 +14,7 @@ def can_user_be_here(user, lesson_id):
     failed = FailedTest.objects.filter(user=user, failed_exam=exam)
     if failed.exists():
         if failed.get().take < 3:
-            return False
+            return True
 
     complete = CompleteTest.objects.filter(user=user, complete_exam=exam)
     if complete.exists():
@@ -61,7 +61,7 @@ def exam_overview(request, lesson_id):
     return render(request, 'exams/welcome.html', {'exam': exam,
                                                   'lesson_id': lesson_id})
 
-
+@login_required(login_url='/accounts/login/')
 def result_view(request, lesson_id):
     """zobrazí výsledky jednoho testu"""
     # aviability

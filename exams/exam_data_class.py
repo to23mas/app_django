@@ -3,6 +3,7 @@ from .models import Exam, Question, Answer, OpenRightAnswer, FailedTest, ExamRes
 from collections import Counter
 from django.utils.timezone import now, timedelta, datetime
 from lessons.models import Lesson, Chapter
+from projects.models import Project
 
 
 class ExamOverview:
@@ -151,6 +152,7 @@ class ExamValidation:
         exam_result.save()
 
         #odemknut9 lekce přes group
+
         next_lesson = Lesson.objects.get(id=self.lesson_id + 1)
         lesson_group = next_lesson.lesson_group
         group = Group.objects.get(name=lesson_group)
@@ -167,6 +169,7 @@ class ExamValidation:
         exam = Exam.objects.get(exam_number=les)
         complete = CompleteTest.objects.create(user=user, complete_exam=exam)
         complete.save()
+        self.__unlock_project(user, self.lesson_id)
 
         # odstranění dostupneho
 
@@ -245,3 +248,8 @@ class ExamValidation:
                 self.__fail(user_id, percentage, calc_result['RIGHT'], calc_result['WRONG'], take=3)
             else:
                 self.__success(user_id, percentage, calc_result['RIGHT'], calc_result['WRONG'])
+
+
+    def __unlock_project(self, user: User, id: int)-> None:
+        if (id >= 2):
+            Project.objects.create(user=user,lesson_id=id+1)

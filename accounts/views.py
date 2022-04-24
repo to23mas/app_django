@@ -1,6 +1,5 @@
-from django.http import HttpResponse
 from django.shortcuts import render, redirect
-from django.contrib.auth.forms import AuthenticationForm, PasswordResetForm
+from django.contrib.auth.forms import AuthenticationForm, PasswordResetForm, UserCreationForm
 from django.contrib.auth import login, logout
 from .forms import CustomUserForm
 from .validation import Validate
@@ -26,13 +25,13 @@ def login_view(request):
     return render(request, 'accounts/login.html', {'form': form})
 
 
-def welcome_view(request, project=1):
+def welcome_view(request):
     """welcome page with twi links to signup  and register"""
 
     if request.user.is_authenticated:
         return redirect('crossroad:welcome')
     else:
-        return render(request, 'accounts/welcome.html', {'project': project})
+        return render(request, 'accounts/welcome.html')
 
 
 def register_view(request):
@@ -57,15 +56,14 @@ def register_view(request):
     return render(request, 'accounts/register.html', {'form': form})
 
 
-def logout_view(request, project=1):
+def logout_view(request, ):
 
     if request.user.is_anonymous:
-        return redirect('accounts:welcome', 1)
+        return redirect('accounts:welcome')
     logout(request)
-    if project == 1:
-        return redirect('accounts:welcome', 1)
-    else:
-        return redirect('accounts:welcome', 2)
+
+    return redirect('accounts:welcome', )
+
 
 def forgotten_password_view(request):
     if request.user.is_authenticated:
@@ -88,3 +86,21 @@ def redirect_logged_user(user):
 
 def password_send_view(request):
     return render(request, 'accounts/password_send.html')
+
+
+def welcome_project_view(request):
+
+    if request.user.is_authenticated:
+        return redirect('crossroad:welcome')
+    else:
+        return render(request, 'accounts/welcomeP.html')
+
+
+def logout_two_view(request):
+    if request.user.is_anonymous:
+        return redirect('accounts:welcome')
+
+    logout(request)
+
+    return redirect('accounts:welcomeProject')
+

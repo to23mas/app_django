@@ -1,8 +1,9 @@
 <div class="q">
 
 
-<h4>{{ q }}</h4>
-
+<h4>{{ q.question_text  }}</h4>
+{{ q.q_html|safe }}
+<br><br>
 
 {% for a in q.answer_set.all %}
   <div>

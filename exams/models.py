@@ -15,7 +15,8 @@ class Exam(models.Model):
 class Question(models.Model):
     """model pro otázky"""
     exam = models.ForeignKey(Exam, on_delete=models.CASCADE)  # každá otázka má jeden test
-    question_text = models.TextField(max_length=200)  # vlastní text otázky
+    question_text = models.TextField(max_length=2000) # vlastní text otázky
+    q_html = models.TextField(max_length=2000, blank=True, null=True, default='')
     tags = (
         ("MULTI", 'multi'),
         ("SINGLE", "single"),

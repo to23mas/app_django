@@ -4,18 +4,24 @@
 <div class="bg bg2"></div>
 <div class="bg bg3"></div>
     <div class="welcome_card">
-        <h1>Login</h1><br>
+        <h1>Přihlášení</h1><br>
 
         <form class="registration_form" action="{% url 'accounts:login' %}" method="post">
             {% csrf_token %} {# security token #}
-            {{ form }}
+
+            <b>Nickname:</b><br>
+            {{ form.username }}
+
+            <b>Heslo:</b><br>
+            {{ form.password }}
+
             {% if request.GET.next %}
                 <input type="hidden" name="back" value="{{ request.GET.next }}">
             {% endif %}
             <input type="submit" value="přihlásit">
         </form>
-    <a class="back_button" href="{% url 'accounts:welcome' 1 %}">BACK</a>
-    <a class="back_button" href="{% url 'accounts:reset' %}">pass</a>
+    <a class="back_button" href="{% url 'accounts:welcome' %}">Zpět</a>
+
     </div>
 
 

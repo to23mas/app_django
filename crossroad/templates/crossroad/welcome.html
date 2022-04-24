@@ -3,103 +3,15 @@
 {% load static %}
     <div  class="overview_big_card">
 
-    <h1 class="text-muted">Welcome placeholder</h1>
+    <h1 class="">Vítej</h1>
 
     <br>
     <br>
-    <br>
 
-    <div class="code_div" style="width: 50%">
-    <span class="code_y">@login_required</span>
-    <span>(</span>
-    <span class="code_r">login_url=</span>
-    <span class="code_gr">'/accounts/login/'</span>
-    <span>)</span><br>
-    <span class="code_o">def</span>
-    <span class="code_go">courses_overview_view</span>
-    <span>(request):</span><br>
-        <div class="code_tab">
-            &nbsp; list_courses = Lesson.objects.all()<br>
-            &nbsp; <span class="code_b">print</span>()
-        </div>
+    <p>
+    Vítej na e-learningových webové aplikaci. Budeš zde seznámen s tworbou vebowých stránek ve frameworku Django.<br>
+    Nejdrříve vytvoříš kostru projektu, kterou budeš postupně rozšiřovat.<br>
+    Pokud si nevíš rady. Na navigační liště klikni na záložku „Lekce“. Vyber si první lekci. V první lekci je popsáno jak s těmito webovými stránkami pracovat.
+    </p>
     </div>
-
-    </div>
-
-
-     <div class="commands">
-         <strong>$</strong> django-admin startproject mysite
-     </div>
-
-    <div class="code_div">
-    app/<br>
-    &emsp;manage.py<br>
-    &emsp;mysite/<br>
-    &emsp;&emsp;__init__.py<br>
-    &emsp;&emsp;settings.py<br>
-    &emsp;&emsp;urls.py<br>
-    &emsp;&emsp;asgi.py<br>
-    &emsp;&emsp;wsgi.py<br>
-    </div>
-
-<div>
-<strong>app/</strong><br>
-kořenový adresář, obsahuje všechny soubory tvého projektu<br><br>
-
-<strong>manage.py</strong><br>
-Nástroj, umožňující s projektem pracovat pomocí příkazového řádku<br><br>
-
-<strong>app/</strong> podruhé<br>
-Vnitřní adresář s názvem projektu je skutečný balíček Pythonu ve tvém projektu.<br><br>
-
-<strong>__init__py</strong><br>
-Soubor __init__.py je úplně prázdný, je zde aby framework poznal, že adresář, ve kterém je tento soubor umístěn byl považován za balíček.<br><br>
-
-<strong>settings.py</strong><br>
-Konfigurace, nebo také nastavení frameworku Django je umístěno v tomto souboru.<br><br>
-
-<strong>urls.py</strong><br>
-Zde se udává základní deklarace URL.<br><br>
-
-<strong>asgi.py</strong><br>
-Vstupní bod pro webové servery, které jsou kompatibilní s ASGI.<br><br>
-
-<strong>wsgi.py</strong><br>
-Vstupní bod pro WSGI servery<br>
-
-</div>
-{#    CODE #}
-    <div class="code_div">
-    </div>
-{#    ORANGE #}
-        <span class="code_o">from </span>
-{#    GGREEN #}
-    <span class="code_gr">''</span>
-{#    RED #}
-    <span class="code_r"></span>=
-{#    GOLD #}
-    <span class="code_go"></span><br>
-{#    BLUE #}
-    <span class="code_b"></span>
-{#    MEZERA #}
-{#   &emsp; #}
-
-    <div class="code_div">
-    <span class="code_o">from </span>django.http<span class="code_o">import </span>HttpResponse<br><br><br>
-    <span class="code_o">def </span><span class="code_go">index</span>(request):<br>
-        &emsp;<span class="code_o">return</span>HttpResponse(<span class="code_gr">'Hello, world. You're at the polls index.'</span>)<br>
-    <span>urlpatterns = [</span><br>
-    &emsp;path(<span class="code_gr">'helloworld'</span>,&ensp;include(<span class="code_gr">'helloworld.urls'</span>)),<br>
-    &emsp;path(<span class="code_gr">'admin'</span>,&ensp;admin.site.urls(<span class="code_gr">'helloworld.urls'</span>),<br>
-    ]
-    </div>
-
-
-
-from django.http import HttpResponse
-
-
-def index(request):
-    return HttpResponse("Hello, world. You're at the polls index.")
-
 {% endblock %}

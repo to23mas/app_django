@@ -1,7 +1,18 @@
+"""
+modul rozšiřující funkcionality šablonovacího systému JINJA
+
+
+@author: Tomáš Míčka
+
+@contact: to23mas@gmail.com
+
+@version:  1.0
+"""
+
+
 from django import template
 from django.contrib.auth.models import User
-from exams.models import ExamResult, Exam, FailedTest
-from django.utils.timezone import now, timedelta
+from exams.models import ExamResult, FailedTest
 from datetime import datetime
 
 register = template.Library()
@@ -9,10 +20,18 @@ register = template.Library()
 
 @register.filter(name='is_failed')
 def failed(failed: FailedTest, user: User) -> int:
-    """ return CODE
+    """  filter vrací  číslo, odpovídající pokusů, které uživatel potřeboval na splnění
+
+    @param failed: neúspěšný test, u kterého nás zajímá, kolik má neúspěšných pokusů
+    @param user: příslušný uživatel
+
+    return CODE
     [0] => successfull
     [1] => first try unsuccesfull
     [2] => second try unsuccessful
+
+    @return int == pokusy
+            None pokud test neexistuje
 
     """
     exam = failed.failed_exam
@@ -25,18 +44,27 @@ def failed(failed: FailedTest, user: User) -> int:
 
 @register.filter(name='get_time')
 def get_time_failed(failed: FailedTest, user: User):
+    """  filter vrací  čas, kdy se zamčený test odemkne
 
+        @param failed: zamčený test
+        @param user: příslušný uživateů
+
+        @return čas odemčení nebo None
+    """
     exam = failed.failed_exam
     if ExamResult.objects.filter(exam=exam).exists():
        return ExamResult.objects.get(exam=exam, user_id=user.id).lock
 
 @register.filter(name='is_timed')
 def is_timed(failed: FailedTest, user: User):
-    # print(type(ExamResult.objects.get(exam=exam_).lock_date))
-    # print(ExamResult.objects.get(exam=exam_).lock_date)
-    # print(datetime.today().date())
-    # print(type(datetime.today().date()))
-    # print(ExamResult.objects.get(exam=exam_).lock_date >= datetime.today())
+    """  filter vrací , údaj o tom, jestli je test zamčený nebo ne
+
+    @param failed: zamčený test
+    @param user: příslušný uživateů
+
+    @return True == odemčeno, False == zamčeno
+
+    """
     exam = failed.failed_exam
     ex = ExamResult.objects.get(exam=exam, user_id=user.id)
     if ex.lock_date >= datetime.today().date():
@@ -48,5 +76,3 @@ def is_timed(failed: FailedTest, user: User):
     failed.save()
     ex.save()
     return True
-
-

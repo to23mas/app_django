@@ -1,3 +1,20 @@
+"""
+Modul s funkcionalitami zařizujícími správné zobrazení testů
+
+classes: ExamOverview - data ohledně vypisování seznamu testů
+        Test -  data jednoho testu
+        ExamValidation - Validuje testy
+
+
+
+@author: Tomáš Míčka
+
+@contact: to23mas@gmail.com
+
+@version:  1.0
+
+
+"""
 from django.contrib.auth.models import User, Group
 from .models import Exam, Question, Answer, OpenRightAnswer, FailedTest, ExamResult, AviableTest, CompleteTest
 from collections import Counter
@@ -22,6 +39,10 @@ class ExamOverview:
 
 
     def __get_failed_exams(self):
+        """funkce načítá testy, které uživatel pokazil
+
+        @return: None or FailedTest  if found
+        """
         failed = FailedTest.objects.filter(user=self.user)
 
         if failed.exists():
@@ -31,6 +52,7 @@ class ExamOverview:
     def __get_aviable_exams(self) -> object:
         """
         hledá dostupné testy
+
         @return: None or Exam model if found
         """
 
@@ -45,6 +67,7 @@ class ExamOverview:
     def __get_completed_exams(self) -> object:
         """
         hledá a vrací splněné testy
+
         @return: None or Exam modle query set
         """
         complete = CompleteTest.objects.filter(user=self.user)
@@ -54,8 +77,7 @@ class ExamOverview:
         return None
 
     def __is_empty(self) -> bool:
-        """
-
+        """funkce hlídá jesli má uživatel vůbec nějaký test dostupnů
         @return: True => pokud uživatel nemá dostupné a splněné žádné testy
         """
         if self.aviable is None and self.success is None and self.failed is None:
@@ -64,13 +86,17 @@ class ExamOverview:
 
 
 class Test:
+    """třída ptředstavuje samotný test"""
     def __init__(self, user: User, exam_id: id):
         """
         načte test pro odeslání do template
 
         @param user: uživatel z requestu,
         @param exam_id: číslo testu
+        @param exam: test
+        @param questions: všechny otázky
         """
+
         self.exam_id = exam_id
         self.user = user
         self.exam = Exam.objects.get(id=self.exam_id)
@@ -83,6 +109,11 @@ class ExamValidation:
         Validace výsledků testu
         @param lesson_id: číslo testu
         @param data: request.POST
+        @param questions: načtení otázek
+        @param q_counts: počet otázek
+        @param progress: dict s počtem správných a špatných odpovědí
+        @param user_answers: seznam odeslaných odpovědí
+        @param user_open: otevřená odpověď
         @param retake: jestli se jedná o opakokvaný test
         """
 
@@ -96,11 +127,14 @@ class ExamValidation:
         self.user_open = ''
 
     def __single(self, question: Question):
+        """funkce se stará o otázky s jendnou správnou odpovědí
+        @param question: příslušná otázka
+        """
 
         # načte id správné odpovědi
         correct = Answer.objects.get(question_id=question, answer_tag='RIGHT').id
         flag = False
-        # iterace přes všechny uživatelovi odpovědi
+        # iterace přes všechny uživatelovy odpovědi
         for answers in self.user_answers:
             if correct == answers:
                 flag = True
@@ -110,7 +144,12 @@ class ExamValidation:
         else:
             self.progress[question.id] = 'WRONG'
 
+
+
     def __multi(self, question: Question):
+        """funkce se stará o otázky s více možnými správnými odpověďmi.
+        @param question: příslušná otázka
+        """
         if len(self.user_answers) == 0:
             self.progress[question.id] = 'WRONG'
             return
@@ -136,6 +175,10 @@ class ExamValidation:
             self.progress[question.id] = 'WRONG'
 
     def __check_open(self, question: Question):
+        """funkce má na starosti o otázky s otevřenou odpovědí
+
+        @param question: příslušná otázka
+        """
         answer = OpenRightAnswer.objects.get(question=question).right_answer
 
         if str(self.user_open) == answer:
@@ -143,7 +186,14 @@ class ExamValidation:
         else:
             self.progress[question.id] = 'WRONG'
 
-    def __success(self, user_id: int, percentage: int, right, wrong):
+    def __success(self, user_id: int, percentage, right, wrong):
+        """v připadě úspěšně napsaného testu se spouší tato funkce
+
+        @param user_id: id uživatele
+        @param percentage: poměr správných a špatných
+        @param right: správné odpovědi
+        @param wrong: počet špatných
+        """
         exam_result = ExamResult.objects.get(exam=self.lesson_id, user_id=user_id)
 
         exam_result.correct = right
@@ -183,8 +233,15 @@ class ExamValidation:
 
 
 
-    def __fail(self, user_id: int, percentage: int, right, wrong, take=2):
+    def __fail(self, user_id: int, percentage, right, wrong, take=2):
+        """v připadě úspěšně napsaného testu se spouší tato funkce
 
+                @param user_id: id uživatele
+                @param percentage: poměr správných a špatných
+                @param right: správné odpovědi
+                @param wrong: počet špatných
+                @param take:počet pokusů
+                """
         exam_result = ExamResult.objects.get(exam=self.lesson_id, user_id=user_id)
         exam_result.take = take
         exam_result.lock = now() + timedelta(minutes=15)
@@ -223,6 +280,8 @@ class ExamValidation:
                 self.user_open = self.data.get('OPEN')
 
     def validate(self):
+        """funkce rozzařuje na menší validace.
+        pokud je otázka 'SINGLE' pošle se do funkce určené na spracování tohoto typu otázek"""
         for question in self.questions:
 
             if question.type_tag == 'SINGLE':
@@ -233,9 +292,14 @@ class ExamValidation:
                 self.__check_open(question)
 
     def result(self, user_id: int):
+        """funkce pro výpočet výsledku testu.
+
+        @param user_id: uživatelovo id
+        """
         calc_result = Counter(self.progress.values())
         sum = calc_result['RIGHT'] + calc_result['WRONG']
         percentage = calc_result['RIGHT'] / (sum / 100)
+
         if not ExamResult.objects.filter(exam=self.lesson_id, user_id=user_id).exists():
             ExamResult.objects.create(exam_id=self.lesson_id, user_id=user_id).save()
 
@@ -251,5 +315,6 @@ class ExamValidation:
 
 
     def __unlock_project(self, user: User, id: int)-> None:
+        """pro lekce s id nad 2 se odemykají i příslušné testovací projekty"""
         if (id >= 2):
             Project.objects.create(user=user,lesson_id=id+1)

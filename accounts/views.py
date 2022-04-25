@@ -1,13 +1,31 @@
+"""
+Views
+
+Všechny views pro přihlašování odhlašování, nebo registaci
+
+@author: Tomáš Míčka
+
+@contact: to23mas@gmail.com
+
+@version:  1.0
+
+
+"""
+
 from django.shortcuts import render, redirect
-from django.contrib.auth.forms import AuthenticationForm, PasswordResetForm, UserCreationForm
+from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, logout
 from .forms import CustomUserForm
-from .validation import Validate
 from lessons.unlock_progress import ProgressHandler
 
 
 def login_view(request):
-    """pro login"""
+    """ View pro přihlašovací obrazovku.
+    Přihlášený uživatel přesměrován do aplikace
+
+    @var form: přihlašovací formulář
+    @var user: uživatel
+    """
 
     if request.user.is_authenticated:
         return redirect('crossroad:welcome')
@@ -26,7 +44,9 @@ def login_view(request):
 
 
 def welcome_view(request):
-    """welcome page with twi links to signup  and register"""
+    """ View uvítací obrazovky. Přihlášeného uživatele rovnou přesměruje do vlastní aplikace
+    Nepřihlášenému zobrazí stránku s výběrem registrace a přihlášení.
+    """
 
     if request.user.is_authenticated:
         return redirect('crossroad:welcome')
@@ -35,7 +55,14 @@ def welcome_view(request):
 
 
 def register_view(request):
-    """register page with form"""
+    """ View pro registraci.
+    Přihlášený uživatel přesměrován do aplikace. Nově registovanému uživateli je přiřazena skupina,
+     aby mohl navštívit první učební lekci
+
+    @var form: registrační formulář
+    @var user: uživatel
+    @var progresshandler: instance třídy ProgressHandler odemyká první lekci
+    """
 
     if request.user.is_authenticated:
         return redirect('crossroad:welcome')
@@ -57,7 +84,7 @@ def register_view(request):
 
 
 def logout_view(request, ):
-
+    """View pro funkci odhlášení"""
     if request.user.is_anonymous:
         return redirect('accounts:welcome')
     logout(request)
@@ -65,31 +92,10 @@ def logout_view(request, ):
     return redirect('accounts:welcome', )
 
 
-def forgotten_password_view(request):
-    if request.user.is_authenticated:
-        return redirect('crossroad:welcome')
-
-    error = ''
-    if request.method == 'POST':
-        error = Validate.validate_email(request.POST['email'])
-        if error != '':
-            return render(request, 'accounts/forgotten_password.html', {'form': PasswordResetForm(),
-                                                                        'error': error})
-        else:
-            return render(request, 'accounts/password_send.html')
-
-
-def redirect_logged_user(user):
-    if user.is_authenticated:
-        return redirect('crossroad:welcome')
-
-
-def password_send_view(request):
-    return render(request, 'accounts/password_send.html')
-
-
 def welcome_project_view(request):
-
+    """View odpovídá WELCOME_VIEW
+    Je zde kvůli zobrazení jiné přihlašovací obrazovky. Uživatel se může dostat k lekc, kde se bude učit,
+     jak vytvořit registrační formulář. Po kliknutí na tuto lekci bude přesměrován na uvítací s vysvětlujícím textem"""
     if request.user.is_authenticated:
         return redirect('crossroad:welcome')
     else:
@@ -97,6 +103,7 @@ def welcome_project_view(request):
 
 
 def logout_two_view(request):
+    """Odhlašující View pro Projekt Account (ÚČTY)"""
     if request.user.is_anonymous:
         return redirect('accounts:welcome')
 

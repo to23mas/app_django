@@ -1,12 +1,32 @@
+"""
+Views
 
+Views pro práci s testy.
+
+
+@author: Tomáš Míčka
+
+@contact: to23mas@gmail.com
+
+@version:  1.0
+
+
+"""
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from .exam_data_class import ExamOverview, Test, ExamValidation
 from .models import Exam, ExamResult, AviableTest, FailedTest, CompleteTest
-from lessons.models import Lesson
+
 
 
 def can_user_be_here(user, lesson_id):
+    """ funkce kontrolující, jestli uživatel vůbec může psát daný test
+    @param user: uživatel
+    @param lesson_id id lekce
+
+    @return True pokud uživatel test psát nemůže
+            false, pokud může
+    """
     exam = Exam.objects.get(exam_number=lesson_id)
     aviable = AviableTest.objects.filter(user=user, aviable_exam=exam)
     if aviable.exists():
@@ -18,15 +38,24 @@ def can_user_be_here(user, lesson_id):
 
     complete = CompleteTest.objects.filter(user=user, complete_exam=exam)
     if complete.exists():
-        return False
-    return True
+        return True
+    return False
 
 
 @login_required(login_url='/accounts/login/')
 def exam_view(request, lesson_id):
-    """stránka se samotným testem"""
+    """view pro stránku se samotným testem.
 
-    # aviability TODO pokud u6ivatel nem8 povolen vstup
+    @var validator: instance třídy ExamValidation
+                      nejdříve načte data, poté zvaliduje.
+
+    @var test: předatavuje data testu
+
+    @param lesson_id: id příslušné lekce
+
+    přesměrování na výsledky testu.
+    """
+
     if not can_user_be_here(request.user, lesson_id):
         return redirect('exams:result', lesson_id)
 
@@ -46,7 +75,7 @@ def exam_view(request, lesson_id):
 
 @login_required(login_url='/accounts/login/')
 def exam_all(request):
-    """přehled dostupných a splněných testů"""
+    """view sobrazuje seznam dostupných testů"""
 
     exams = ExamOverview(request.user)
     return render(request, 'exams/all.html', {'exams': exams})
@@ -54,7 +83,10 @@ def exam_all(request):
 
 @login_required(login_url='/accounts/login/')
 def exam_overview(request, lesson_id):
-    """úvodní stránka než začne test"""
+    """View pro stránku s úvodem do testu, který se uživatel chystá psát
+
+    @param lesson_id: id likce pro nalezení příslušného testu
+    """
     exam = Exam.objects.get(id=lesson_id)
     if not can_user_be_here(request.user, lesson_id):
         return redirect('exams:all')
@@ -63,8 +95,11 @@ def exam_overview(request, lesson_id):
 
 @login_required(login_url='/accounts/login/')
 def result_view(request, lesson_id):
-    """zobrazí výsledky jednoho testu"""
-    # aviability
+    """View se stránkou s výsledkem testu
+    @param lesson_id: id lekce , podle kterého se zništťuje, který test se má zobrazit
+    @var result: výsledek testu
+    """
+
     if not ExamResult.objects.filter(user_id=request.user.id,
                                      exam=lesson_id).exists():
         return redirect('crossroad:overview')

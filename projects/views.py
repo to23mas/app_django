@@ -13,16 +13,15 @@ Projekty jsou - Helloworld, Úkolníček, Account
 @version:  1.0
 
 
-
-TODO změnit projekty až bude hotovo
 """
-
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from .forms import UkolForm, RegisterForm, LoginForm
 from .models import Ukol, Project, UserAccount
 
 
+@login_required(login_url='/accounts/login/')
 def hello_view(request):
     """ View pro první projekt, kde je poze vypsán text
 
@@ -31,7 +30,7 @@ def hello_view(request):
     """
     return render(request, 'projects/hello_world.html')
 
-
+@login_required(login_url='/accounts/login/')
 def todo_view(request):
     """ View pro druhý projekt "úkolníček"
 
@@ -55,7 +54,7 @@ def todo_view(request):
     return render(request, 'projects/todo.html', {'form': form,
                                                   'ukoly': ukoly})
 
-
+@login_required(login_url='/accounts/login/')
 def todo_two_view(request):
     """ View pro rozšířenou verzi úkolníčku.
 
@@ -82,7 +81,7 @@ def todo_two_view(request):
     return render(request, 'projects/todo_two.html', {'form': form,
                                                       'ukoly': ukoly})
 
-
+@login_required(login_url='/accounts/login/')
 def delete_todo(request, todo_id: int):
     """View pro mazání jednotlivých úkolů.
 
@@ -95,7 +94,7 @@ def delete_todo(request, todo_id: int):
     Ukol.objects.get(id=todo_id).delete()
     return redirect('projects:todo_two')
 
-
+@login_required(login_url='/accounts/login/')
 def all_view(request):
     """View zobrazí uživateli všechny dostupné projekty
 
@@ -106,14 +105,14 @@ def all_view(request):
     projects = Project.objects.filter(user=request.user)
     return render(request, 'projects/all.html', {'projects': projects})
 
-
+@login_required(login_url='/accounts/login/')
 def cross_view(request):
     """View pro projekt "accounts"
     @return:    vrací html stránku s odkazem na registraci a na přihlášení
     """
     return render(request, 'projects/cross.html')
 
-
+@login_required(login_url='/accounts/login/')
 def accounts_login_one(request):
     """View pro projekt "Accounts". s možností přihlášení účtů, které si uživatel vytvořil.
 
@@ -139,7 +138,7 @@ def accounts_login_one(request):
                                                            'fail': fail,
                                                            'users': users, })
 
-
+@login_required(login_url='/accounts/login/')
 def accounts_register_view(request):
     """View pro project "Accounts". Zde si uživatel zkouší registraci účtů.
 
@@ -169,7 +168,7 @@ def accounts_register_view(request):
         'message': message,
     })
 
-
+@login_required(login_url='/accounts/login/')
 def register_form_check(form: RegisterForm, user: User) -> list:
     """ Funkce hledá chyby v registračním formuláři
 
@@ -200,7 +199,7 @@ def register_form_check(form: RegisterForm, user: User) -> list:
         message.append('Hesla se neshodují')
     return message
 
-
+@login_required(login_url='/accounts/login/')
 def login_form_check(form: LoginForm, user: User) -> bool:
     """Funkce pro přihlášení se do účtu.
 
@@ -222,7 +221,7 @@ def login_form_check(form: LoginForm, user: User) -> bool:
         return False
     return True
 
-
+@login_required(login_url='/accounts/login/')
 def done_view(request):
     """View Pro projekt "Accounts"
 

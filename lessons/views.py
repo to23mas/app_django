@@ -1,7 +1,17 @@
-from django.forms import Form
+"""
+Views
+
+Views pro zobrazování, odemykání a posílání dat ohledně lekcí
+
+@author: Tomáš Míčka
+
+@contact: to23mas@gmail.com
+
+@version:  1.0
+
+"""
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from lessons.models import Lesson, Chapter, Requirements, Goals, Content
 from .allowed import is_user_allowed
 from .unlock_progress import ProgressHandler
 from .load_data_class import LessonData
@@ -9,6 +19,7 @@ from .load_data_class import LessonData
 
 @login_required(login_url='/accounts/login/')
 def switch_view(request, lesson_id, chapter_link):
+    """View pro přesměrovávání, aby nedocházelo k opetovnému odesílání formulářů"""
     if lesson_id == 1:
         return redirect('lessons:lessonOne', chapter_link=chapter_link)
 
@@ -22,6 +33,16 @@ def switch_view(request, lesson_id, chapter_link):
 
 @login_required(login_url='/accounts/login/')
 def project_view(request, lesson_id, chapter_link):
+    """View zaměřené na projekty.
+
+    @param lesson_id: id lekce
+    @param chapter_link: název prohlížené kapitoly
+
+    @var data: data příslušné lekce - kapitoly, texty, obrázky
+    @var hint: nápověda k otázce
+    @var progress_handler = ProgressHandler má na starosti odemykání zamčeného obsahu
+
+    """
     data = LessonData(lesson_id, chapter_link, request.user)
     hint = ''
     if request.method == 'POST':
@@ -32,8 +53,13 @@ def project_view(request, lesson_id, chapter_link):
             else:
                 hint = progress_handler.hint
         elif 'exam' in request.POST:
-            progress_handler.unlock_test()
-            return redirect('exams:welcome', lesson_id=data.lesson.id)
+            a = progress_handler.unlock_test()
+            if a == 1:
+                return redirect('crossroad:welcome')
+            else:
+                return redirect('exams:welcome', lesson_id=data.lesson.id)
+
+
 
         elif 'read':
             next_lesson = progress_handler.unlock_next_chapter(data.chapter.chapter_order)
@@ -51,8 +77,19 @@ def project_view(request, lesson_id, chapter_link):
                                                     'hint': hint
                                                     })
 
-
+@login_required(login_url='/accounts/login/')
 def lessonOne_view(request, chapter_link):
+    """View zaměřené na první lekci, první lekce má jinou strukturu
+        než dvšechny ostatní a tak potřebuje vlastní view
+
+        @param lesson_id: id lekce
+        @param chapter_link: název prohlížené kapitoly
+
+        @var data: data příslušné lekce - kapitoly, texty, obrázky
+        @var hint: nápověda k otázce
+        @var progress_handler = ProgressHandler má na starosti odemykání zamčeného obsahu
+
+        """
     data = LessonData(1, chapter_link, request.user)
     hint = ''
     # odkliknutí tlačítka přečteno
@@ -66,8 +103,11 @@ def lessonOne_view(request, chapter_link):
                 hint = 'Tak takhle se asi nejmenuješ'
 
         elif 'exam' in request.POST:
-            progress_handler.unlock_first_test()
-            return redirect('exams:welcome', lesson_id=data.lesson.id)
+            a = progress_handler.unlock_first_test(1)
+            if a == 1:
+                return redirect('crossroad:welcome')
+            else:
+                return redirect('exams:welcome', lesson_id=data.lesson.id)
 
         elif 'read':
             next_lesson = progress_handler.unlock_next_chapter(data.chapter.chapter_order)
@@ -76,7 +116,7 @@ def lessonOne_view(request, chapter_link):
                             lesson_id=data.lesson.id,
                             chapter_link=next_lesson)
 
-    # TODO ještě vyhodit uživatele z kapitoly ne jenom z lekce
+
     if not is_user_allowed(data.user, data.lesson.id, data.chapter):
         return render(request, 'crossroad/welcome.html')
 
@@ -90,16 +130,31 @@ def lessonOne_view(request, chapter_link):
                                                  'hint': hint
                                                  })
 
-
+@login_required(login_url='/accounts/login/')
 def lessonTwo_view(request, chapter_link):
+    """View zaměřené na druhou lekci, druhá lekce má jinou strukturu
+            než dvšechny ostatní a tak potřebuje vlastní view
+
+            @param lesson_id: id lekce
+            @param chapter_link: název prohlížené kapitoly
+
+            @var data: data příslušné lekce - kapitoly, texty, obrázky
+            @var hint: nápověda k otázce
+            @var progress_handler = ProgressHandler má na starosti odemykání zamčeného obsahu
+
+            """
     data = LessonData(2, chapter_link, request.user)
 
     # odkliknutí tlačítka přečteno
     if request.method == 'POST':
         progress_handler = ProgressHandler(user=data.user, lesson_id=2)
         if 'exam' in request.POST:
-            progress_handler.unlock_first_test()
-            return redirect('exams:exam', lesson_id=data.lesson.id)
+            a = progress_handler.unlock_first_test(2)
+
+            if a == 1:
+                return redirect('crossroad:welcome')
+            else:
+                return redirect('exams:welcome', lesson_id=data.lesson.id)
         elif 'read':
             next_lesson = progress_handler.unlock_next_chapter(data.chapter.chapter_order)
 
@@ -116,6 +171,7 @@ def lessonTwo_view(request, chapter_link):
                                                   'is_complete': data.chapter_is_complete,
                                                   })
 
-
+@login_required(login_url='/accounts/login/')
 def not_view(request, not_):
+    """View pro případ že nějakej uličník zkusí podvádět"""
     return render(request, 'lessons/not.html')

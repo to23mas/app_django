@@ -31,7 +31,7 @@ class ExamOverview:
         """
         self.user = user
 
-        # TODO test null values -> new user should look into test folder
+
         self.aviable = self.__get_aviable_exams()  # tsty které se dají psát
         self.success = self.__get_completed_exams()  # query set with Exam... úspěšné testy
         self.failed = self.__get_failed_exams() # ne[spesne testy

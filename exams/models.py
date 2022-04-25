@@ -28,7 +28,7 @@ class Exam(models.Model):
     """
     exam_header = models.CharField(max_length=200)  # nadpis testu
     exam_intro = models.TextField(max_length=1000)  # úvod popis
-    exam_time = models.IntegerField(blank=True, null=True)  # předpokládaná délka testu .. TODO neimplementováno
+    exam_time = models.IntegerField(blank=True, null=True)  # předpokládaná délka testu ..
     exam_number = models.IntegerField(blank=True, null=True)
     def __str__(self):
         """funkce pro výpis -> ID - NADPIS"""

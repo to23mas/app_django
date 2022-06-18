@@ -98,11 +98,11 @@ body{
 }
 /*div pro n8ázev lekce a názvu kapitoly*/
 .lesson_chapter_header{
-    margin: 0 150px 15px 0;
+    margin: 0 15% 15px 0;
 
     float: right;
     text-align: center;
-    width : 73%;
+    width : 68%;
     /*background-color: #ffd351;*/
     border-radius: 25px;
     box-shadow: rgba(60, 64, 67, 0.3) 0 1px 2px 0,
@@ -110,9 +110,9 @@ body{
 }
 /*box pro dla6dice uvnit5 lekce*/
 .lesson_chapter{
-    margin: 0 150px 15px 0;
+    margin: 0 15% 15px 0;
     float: right;
-    width : 73%;
+    width : 68%;
     /*background-color: #ffd351;*/
     border-radius: 25px;
     box-shadow: rgba(60, 64, 67, 0.3) 0 1px 2px 0,
@@ -182,7 +182,7 @@ hr.content{
 }
 .side_border{
     margin-left: 15px;
-    width: 300px;
+    width: 15%;
     height: 300px;
     float: left;
     border: 1px solid black;

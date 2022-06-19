@@ -53,7 +53,9 @@ def get_time_failed(failed: FailedTest, user: User):
     """
     exam = failed.failed_exam
     if ExamResult.objects.filter(exam=exam).exists():
-       return ExamResult.objects.get(exam=exam, user_id=user.id).lock
+        my_time = ExamResult.objects.get(exam=exam, user_id=user.id).lock
+
+        return f'{my_time.hour + 2} : {my_time.minute}'
 
 @register.filter(name='is_timed')
 def is_timed(failed: FailedTest, user: User):

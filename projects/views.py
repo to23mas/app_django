@@ -128,8 +128,11 @@ def accounts_login_one(request):
     form = LoginForm(request.POST or None, request.FILES or None)
     fail = ''
     if request.method == 'POST':
-        if login_form_check(form, request.user):
+
+        form.user = request.user
+        if login_form_check(form):
             fail = 'chybné heslo nebo jméno'
+
         else:
             return redirect('projects:done')
 
@@ -157,7 +160,7 @@ def accounts_register_view(request):
     if request.method == 'POST':
         if form.is_valid():
             form.instance.user = request.user
-            message = register_form_check(form, request.user)
+            # message = register_form_check(form, request.user)
             if len(message) == 0:
                 form.save()
 
@@ -200,22 +203,21 @@ def register_form_check(form: RegisterForm, user: User) -> list:
     return message
 
 @login_required(login_url='/accounts/login/')
-def login_form_check(form: LoginForm, user: User) -> bool:
+def login_form_check(form: LoginForm) -> bool:
     """Funkce pro přihlášení se do účtu.
 
     Funkce se podívá do databáze, jestli existuje účet, který uživatel založil, kontroluje se
     název účtu a heslo.
 
     @param form: přihlašovací formulář
-    @param user: uživatel, který formulář vyplnil
+
 
     @var accout: účet vytvořený uživatelem
     @return:    1. True pokud přihlášení proběhlo
                 2. False pokud ne
     """
     account = UserAccount.objects.filter(jmeno=form.data.get('jmeno'),
-                                         heslo=form.data.get('heslo'),
-                                         user=user)
+                                         heslo=form.data.get('heslo'))
 
     if account.exists():
         return False
